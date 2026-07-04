@@ -77,6 +77,15 @@ Scam Autopsy detects the input language automatically and responds in kind:
 
 Tested with eval cases in English, Spanish, French, and Tagalog.
 
+## 🛡️ Escalation Forecast
+
+To preview future danger, Scam Autopsy predicts how the scam attempt would likely escalate if engaged:
+
+- **Defensive Warnings** — Outlines 3 progressive stages strictly from the victim's perspective (e.g. Stage 1: Trust-building, Stage 2: Small request, Stage 3: Crisis demand).
+- **Red Flags** — Identifies specific warning indicators/signals for each stage.
+- **Strictly Educational** — Never generates operational scam text, templates, or scripts.
+- **Safety Gated** — Routes all output dynamically through the Policy Server's semantic check.
+
 ---
 
 ## Development
