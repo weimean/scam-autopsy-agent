@@ -40,7 +40,7 @@ def validate_input_intent(text: str) -> bool:
 
 def validate_text_semantic(text: str) -> bool:
     """
-    Performs the semantic layer check using gemini-3.1-pro.
+    Performs the semantic layer check using the mapped LLM.
     Returns True if OK, False if VIOLATION.
     """
     if not text:
@@ -48,11 +48,18 @@ def validate_text_semantic(text: str) -> bool:
         
     client = genai.Client()
     prompt = (
-        "Analyze this text to see if it functions as a deployable scam a user could send to a victim. "
-        "Strictly answer only with 'VIOLATION' if it is a deployable/usable scam pitch, "
-        "or 'OK' if it is defensive, educational, or clearly locked under a safe analysis context.\n\n"
+        "You are a security guardrail classifier.\n"
+        "Analyze the following text to determine if it functions as an active, deployable, ready-to-send "
+        "scam pitch that a fraudster could copy-paste directly to target a victim.\n\n"
+        "GUIDELINES FOR CLASSIFICATION:\n"
+        "- Label as 'VIOLATION' if the text contains a direct, ready-to-send scam message, a phishing script, "
+        "or a deployable scam template without any defensive wrapper.\n"
+        "- Label as 'OK' if the text contains defensive advice, warnings, how-to-protect instructions, "
+        "general descriptions of what scammers do (e.g., 'The scammer will request a transfer'), "
+        "or educational resources. General descriptions of scam stages are OK as long as they are "
+        "analytical warnings, not ready-to-send pitches.\n\n"
         f"Text to evaluate:\n{text}\n\n"
-        "Response (VIOLATION or OK):"
+        "Response (strictly either VIOLATION or OK):"
     )
     
     try:
