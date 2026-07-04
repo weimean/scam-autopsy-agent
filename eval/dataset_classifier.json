@@ -1,0 +1,1005 @@
+{
+  "dataset": "classifier_evaluation",
+  "cases": [
+    {
+      "id": "cls-001",
+      "input": "lyricalladie(21/F) is inviting you to be her friend. Reply YES-910 or NO-910. See her: [[URL]] STOP? Send STOP FRND to 62468",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-002",
+      "input": "Ever thought about living a good life with a perfect partner? Just txt back NAME and AGE to join the mobile community. (100p/SMS)",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-003",
+      "input": "FreeMsg Why haven't you replied to my text? I'm Randy, sexy, female and live local. Luv to hear from u. Netcollex Ltd 08700621170150p per msg reply Stop to end",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-004",
+      "input": "Great News! Call FREEFONE [[PHONE]] to claim your guaranteed [[AMOUNT]] CASH or [[AMOUNT]] gift. Speak to a live operator NOW!",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-005",
+      "input": "Call FREEPHONE [[PHONE]] now!",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-006",
+      "input": "U have a secret admirer who is looking 2 make contact with U-find out who they R*reveal who thinks UR so special-call on [[PHONE]]",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-007",
+      "input": "all the lastest from Stereophonics, Marley, Dizzee Racal, Libertines and The Strokes! Win Nookii games with Flirt!! Click TheMob WAP Bookmark or text WAP to 82468",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-008",
+      "input": "You have WON a guaranteed [[AMOUNT]] cash or a [[AMOUNT]] prize. To claim yr prize call our customer service representative on [[PHONE]] between 10am-7pm",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-009",
+      "input": "December only! Had your mobile 11mths+? You are entitled to update to the latest colour camera mobile for Free! Call The Mobile Update VCo FREE on [[PHONE]]",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-010",
+      "input": "In The Simpsons Movie released in July 2007 name the band that died at the start of the film? A-Green Day, B-Blue Day, C-Red Day. (Send A, B or C)",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-011",
+      "input": "22 days to kick off! For Euro2004 U will be kept up to date with the latest news and results daily. To be removed send GET TXT STOP to 83222",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-012",
+      "input": "Want explicit SEX in 30 secs? Ring [[PHONE]] now! Costs 20p/min",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-013",
+      "input": "URGENT! We are trying to contact U. Todays draw shows that you have won a [[AMOUNT]] prize GUARANTEED. Call [[PHONE]] from land line. Claim Y87. Valid 12hrs only",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-014",
+      "input": "Are you unique enough? Find out from 30th August. [[URL]]",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-015",
+      "input": "URGENT! We are trying to contact you. Last weekends draw shows that you have won a [[AMOUNT]] prize GUARANTEED. Call [[PHONE]]. Claim code S89. Valid 12hrs only",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-016",
+      "input": "88800 and 89034 are premium phone services call [[PHONE]]",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-017",
+      "input": "SMS AUCTION - A BRAND NEW Nokia 7250 is up 4 auction today! Auction is FREE 2 join & take part! Txt NOKIA to 86021 now! HG/Suite342/2Lands Row/W1J6HL",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-018",
+      "input": "Monthly password for wap. mobsi.com is 391784. Use your wap phone not PC.",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-019",
+      "input": "Dear Dave this is your final notice to collect your 4* Tenerife Holiday or #5000 CASH award! Call [[PHONE]] from landline. TCs SAE Box326 CW25WX 150ppm",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-020",
+      "input": "Had your contract mobile 11 Mnths? Latest Motorola, Nokia etc. all FREE! Double Mins & Text on Orange tariffs. TEXT YES for callback, no to remove from records",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-021",
+      "input": "You are a winner U have been specially selected 2 receive [[AMOUNT]] cash or a 4* holiday (flights inc) speak to a live operator 2 claim [[PHONE]]",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-022",
+      "input": "Show ur colours! Euro 2004 2-4-1 Offer! Get an England Flag & 3Lions tone on ur phone! Click on the following service message for info!",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-023",
+      "input": "Dear U've been invited to XCHAT. This is our final attempt to contact u! Txt CHAT to 86688 150p/MsgrcvdHG/Suite342/2Lands/Row/W1J6HL LDN 18 yrs",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-024",
+      "input": "Great News! Call FREEFONE [[PHONE]] to claim your guaranteed [[AMOUNT]] CASH or [[AMOUNT]] gift. Speak to a live operator NOW!",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-025",
+      "input": "Call [[PHONE]] and send our girls into erotic ecstacy. Just 60p/min. To stop texts call [[PHONE]] (nat rate)",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-026",
+      "input": "Marvel Mobile Play the official Ultimate Spider-man game ([[AMOUNT]]) on ur mobile right now. Text SPIDER to 83338 for the game & we ll send u a FREE 8Ball wallpaper",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-027",
+      "input": "UR GOING 2 BAHAMAS! CallFREEFONE [[PHONE]] and speak to a live operator to claim either Bahamas cruise of[[AMOUNT]] CASH 18+only. To opt out txt X to [[PHONE]]",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-028",
+      "input": "As a Registered Subscriber yr draw 4 a [[AMOUNT]] gift voucher will b entered on receipt of a correct ans. When are the next olympics. Txt ans to 80062",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-029",
+      "input": "Am new 2 club & dont fink we met yet Will B gr8 2 C U Please leave msg 2day wiv ur area [[PHONE]] reply promised CARLIE x Calls[[AMOUNT]]/minMobsmore LKPOBOX177HP51FL",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-030",
+      "input": "3. You have received your mobile content. Enjoy",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-031",
+      "input": "Call [[PHONE]] to use ur mins! Calls cast 10p/min (mob vary). Service provided by AOM, just GBP5/month. AOM Box61,M60 1ER until u stop. Ages 18+ only!",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-032",
+      "input": "XXXMobileMovieClub: To use your credit, click the WAP link in the next txt message or click here>> [[URL]] xxxmobilemovieclub.com?n=QJKGIGHJJGCBL",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-033",
+      "input": "Dear U've been invited to XCHAT. This is our final attempt to contact u! Txt CHAT to 86688",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-034",
+      "input": "URGENT! Last weekend's draw shows that you have won [[AMOUNT]] cash or a Spanish holiday! CALL NOW [[PHONE]] to claim. T&C: RSTM, SW7 3SS. 150ppm",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-035",
+      "input": "FreeMSG You have been awarded a FREE mini DIGITAL CAMERA, just reply SNAP to collect your prize! (quizclub Opt out? Stop 80122300p/wk SP:RWM Ph:[[PHONE]])",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-036",
+      "input": "Get the official ENGLAND poly ringtone or colour flag on yer mobile for tonights game! Text TONE or FLAG to 84199. Optout txt ENG STOP Box39822 W111WX [[AMOUNT]]",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-037",
+      "input": "EASTENDERS TV Quiz. What FLOWER does DOT compare herself to? D= VIOLET E= TULIP F= LILY txt D E or F to 84025 NOW 4 chance 2 WIN [[AMOUNT]] Cash WKENT/150P16+",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-038",
+      "input": "You have won a Nokia 7250i. This is what you get when you win our FREE auction. To take part send Nokia to 86021 now. HG/Suite342/2Lands Row/W1JHL 16+",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-039",
+      "input": "WINNER! As a valued network customer you hvae been selected to receive a [[AMOUNT]] reward! To collect call [[PHONE]]. Valid 24 hours only. ACL03530150PM",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-040",
+      "input": "PRIVATE! Your 2003 Account Statement for [[PHONE]] shows 800 un-redeemed S. I. M. points. Call [[PHONE]] Identifier Code: 40411 Expires 06/11/04",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-041",
+      "input": "You have won ?1,000 cash or a ?2,000 prize! To claim, call09050000327. T&C: RSTM, SW7 3SS. 150ppm",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-042",
+      "input": "You've won tkts to the EURO2004 CUP FINAL or [[AMOUNT]] CASH, to collect CALL [[PHONE]] b4190604, POBOX 7876150ppm",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-043",
+      "input": "<Forwarded from [[PHONE]]>Please CALL [[PHONE]] immediately as there is an urgent message waiting for you.",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-044",
+      "input": "sports fans - get the latest sports news str* 2 ur mobile 1 wk FREE PLUS a FREE TONE Txt SPORT ON to 8007 [[URL]] [[PHONE]]+ norm 4txt/120p",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-045",
+      "input": "U are subscribed to the best Mobile Content Service in the UK for [[AMOUNT]] per ten days until you send STOP to 83435. Helpline [[PHONE]].",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-046",
+      "input": "For ur chance to win a [[AMOUNT]] wkly shopping spree TXT: SHOP to 80878. T's&C's [[URL]] custcare [[PHONE]], 1x150p/wk",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-047",
+      "input": "Call from [[PHONE]] - tells u 2 call [[PHONE]] to claim [[AMOUNT]] prize. U have 2 enter all ur mobile & personal details @ the prompts. Careful!",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-048",
+      "input": "SMS. ac Blind Date 4U!: Rodds1 is 21/m from Aberdeen, United Kingdom. Check Him out [[URL]] sms. ac/W/icmb3cktz8r7!-4 no Blind Dates send HIDE",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-049",
+      "input": "You are a [[AMOUNT]] winner or Guaranteed Caller Prize, this is our Final attempt to contact you! To Claim Call [[PHONE]] Now! 150ppmPOBox10183BhamB64XE",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-050",
+      "input": "Orange brings you ringtones from all time Chart Heroes, with a free hit each week! Go to Ringtones & Pics on wap. To stop receiving these tips reply STOP.",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-051",
+      "input": "We tried to contact you re our offer of New Video Phone 750 anytime any network mins HALF PRICE Rental camcorder call [[PHONE]] or reply for delivery Wed",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-052",
+      "input": "Congratulations - Thanks to a good friend U have WON the [[AMOUNT]] Xmas prize. 2 claim is easy, just call [[PHONE]] NOW! Only 10p per minute. BT-national-rate",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-053",
+      "input": "GENT! We are trying to contact you. Last weekends draw shows that you won a [[AMOUNT]] prize GUARANTEED. Call [[PHONE]]. Claim Code K52. Valid 12hrs only. 150ppm",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-054",
+      "input": "Urgent! Please call [[PHONE]]. Your ABTA complimentary 4* Spanish Holiday or [[AMOUNT]] cash await collection SAE T&Cs BOX 47 PO19 2EZ 150ppm 18+",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-055",
+      "input": "FreeMsg: Hey - I'm Buffy. 25 and love to satisfy men. Home alone feeling randy. Reply 2 C my PIX! QlynnBV Help08700621170150p a msg Send stop to stop txts",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-056",
+      "input": "Urgent -call 09066649731from Landline. Your complimentary 4* Ibiza Holiday or [[AMOUNT]] cash await collection SAE T&Cs PO BOX 434 SK3 8WP 150ppm 18+",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-057",
+      "input": "WIN: We have a winner! Mr. T. Foley won an iPod! More exciting prizes soon, so keep an eye on ur mobile or visit [[URL]]",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-058",
+      "input": "FreeMsg: Fancy a flirt? Reply DATE now & join the UKs fastest growing mobile dating service. Msgs rcvd just 25p to optout txt stop to 83021. Reply DATE now!",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-059",
+      "input": "Our dating service has been asked 2 contact U by someone shy! CALL [[PHONE]] NOW all will be revealed. POBox84, M26 3UZ 150p",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-060",
+      "input": "FREE2DAY sexy St George's Day pic of Jordan!Txt PIC to 89080 dont miss out, then every wk a saucy celeb!4 more pics c PocketBabe.co.uk [[PHONE]] [[AMOUNT]]/wk",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-061",
+      "input": "+123 Congratulations - in this week's competition draw u have won the [[AMOUNT]] prize to claim just call [[PHONE]] b4280703. T&Cs/stop SMS [[PHONE]]. Over 18 only 150ppm",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-062",
+      "input": "Think ur smart ? Win [[AMOUNT]] this week in our weekly quiz, text PLAY to 85222 now!T&Cs WinnersClub PO BOX 84, M26 3UZ. 16+. GBP1.50/week",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-063",
+      "input": "PRIVATE! Your 2003 Account Statement for shows 800 un-redeemed S.I.M. points. Call [[PHONE]] Identifier Code:4xx26 Expires 13/10/04",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-064",
+      "input": "FreeMsg:Feelin kinda lnly hope u like 2 keep me company! Jst got a cam moby wanna c my pic?Txt or reply DATE to 82242 Msg150p 2rcv Hlp [[PHONE]] stop to 82242",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-065",
+      "input": "Sunshine Hols. To claim ur med holiday send a stamped self address envelope to Drinks on Us UK, PO Box 113, Bray, Wicklow, Eire. Quiz Starts Saturday! Unsub Stop",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-066",
+      "input": "You have won ?1,000 cash or a ?2,000 prize! To claim, call09050000327",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-067",
+      "input": "\"For the most sparkling shopping breaks from 45 per person; call [[PHONE]] or visit [[URL]]",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-068",
+      "input": "+[[PHONE]] URGENT! This is the 2nd attempt to contact U!U have WON [[AMOUNT]] CALL [[PHONE]] b4 050703 T&CsBCM4235WC1N3XX. callcost 150ppm mobilesvary. max[[AMOUNT]]. 50",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-069",
+      "input": "Had your mobile 11mths ? Update for FREE to Oranges latest colour camera mobiles & unlimited weekend calls. Call Mobile Upd8 on freefone [[PHONE]] or 2StopTxt",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-070",
+      "input": "If you don't, your prize will go to another customer. T&C at [[URL]] 18+ 150p/min Polo Ltd Suite 373 London W1J 6HL Please call back if busy",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-071",
+      "input": "Bloomberg -Message center +[[PHONE]] Why wait? Apply for your future [[URL]] bloomberg.com",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-072",
+      "input": "PRIVATE! Your 2003 Account Statement for shows 800 un-redeemed S. I. M. points. Call [[PHONE]] Identifier Code: 42810 Expires 29/10/0",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-073",
+      "input": "18 days to Euro2004 kickoff! U will be kept informed of all the latest news and results daily. Unsubscribe send GET EURO STOP to 83222.",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-074",
+      "input": "Dear Subscriber ur draw [[AMOUNT]]100 gift voucher will b entered on receipt of a correct ans. When was Elvis Presleys Birthday? TXT answer to 80062",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-075",
+      "input": "How come it takes so little time for a child who is afraid of the dark to become a teenager who wants to stay out all night?",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-076",
+      "input": "Wanna get laid 2nite? Want real Dogging locations sent direct to ur mobile? Join the UK's largest Dogging Network. Txt PARK to 69696 now! Nyt. ec2a. 3lp [[AMOUNT]]/msg",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-077",
+      "input": "Your account has been credited with 500 FREE Text Messages. To activate, just txt the word: CREDIT to No: 80488 T&Cs [[URL]]",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-078",
+      "input": "WELL DONE! Your 4* Costa Del Sol Holiday or [[AMOUNT]] await collection. Call [[PHONE]] Now toClaim. SAE, TCs, POBox334, Stockport, SK38xh, Cost[[AMOUNT]]/pm, Max10mins",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-079",
+      "input": "Got what it takes 2 take part in the WRC Rally in Oz? U can with Lucozade Energy! Text RALLY LE to 61200 (25p), see packs or [[URL]] & itcould be u!",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-080",
+      "input": "Boltblue tones for 150p Reply POLY# or MONO# eg POLY3 1. Cha Cha Slide 2. Yeah 3. Slow Jamz 6. Toxic 8. Come With Me or STOP 4 more tones txt MORE",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-081",
+      "input": "Sunshine Quiz! Win a super Sony DVD recorder if you canname the capital of Australia? Text MQUIZ to 82277. B",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-082",
+      "input": "Dear 0776xxxxxxx U've been invited to XCHAT. This is our final attempt to contact u! Txt CHAT to 86688 150p/MsgrcvdHG/Suite342/2Lands/Row/W1J6HL LDN 18yrs",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-083",
+      "input": "Thank you, winner notified by sms. Good Luck! No future marketing reply STOP to 84122 customer services [[PHONE]]",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-084",
+      "input": "TBS/PERSOLVO. been chasing us since Sept for[[AMOUNT]] definitely not paying now thanks to your information. We will ignore them. Kath. Manchester.",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-085",
+      "input": "Want explicit SEX in 30 secs? Ring [[PHONE]] now! Costs 20p/min Gsex POBOX 2667 WC1N 3XX",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-086",
+      "input": "Message Important information for O2 user. Today is your lucky day! 2 find out why log onto [[URL]] there is a fantastic surprise awaiting you",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-087",
+      "input": "From next month get upto 50% More Calls 4 Ur standard network charge 2 activate Call [[PHONE]] C Wire3.net 1st4Terms PoBox84 M26 3UZ Cost [[AMOUNT]] min MobcudB more",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-088",
+      "input": "Send a logo 2 ur lover - 2 names joined by a heart. Txt LOVE NAME1 NAME2 MOBNO eg LOVE ADAM EVE [[PHONE]] to 87077 Yahoo! POBox36504W45WQ TxtNO 4 no ads 150p.",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-089",
+      "input": "You have won a guaranteed [[AMOUNT]] award or even [[AMOUNT]] cashto claim UR award call free on [[PHONE]] (18+) 2 stop getstop on 88222 PHP",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-090",
+      "input": "No 1 POLYPHONIC tone 4 ur mob every week! Just txt PT2 to 87575. 1st Tone FREE ! so get txtin now and tell ur friends. 150p/tone. 16 reply HL 4info",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-091",
+      "input": "IMPORTANT INFORMATION 4 ORANGE USER 0796XXXXXX. TODAY IS UR LUCKY DAY!2 FIND OUT WHY LOG ONTO [[URL]] THERE'S A FANTASTIC PRIZEAWAITING YOU!",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-092",
+      "input": "PRIVATE! Your 2003 Account Statement for shows 800 un-redeemed S. I. M. points. Call [[PHONE]] Identifier Code: 41685 Expires 07/11/04",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-093",
+      "input": "XMAS Prize draws! We are trying to contact U. Todays draw shows that you have won a [[AMOUNT]] prize GUARANTEED. Call [[PHONE]] from land line. Valid 12hrs only",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-094",
+      "input": "4mths half price Orange line rental & latest camera phones 4 FREE. Had your phone 11mths ? Call MobilesDirect free on [[PHONE]] to update now! or2stoptxt",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-095",
+      "input": "For ur chance to win a [[AMOUNT]] cash every wk TXT: ACTION to 80608. T's&C's [[URL]] custcare [[PHONE]], 1x150p/wk",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-096",
+      "input": "Get your garden ready for summer with a FREE selection of summer bulbs and seeds worth [[AMOUNT]]:50 only with The Scotsman this Saturday. To stop go2 notxt.co.uk",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-097",
+      "input": "Congratulations! Thanks to a good friend U have WON the [[AMOUNT]] Xmas prize. 2 claim is easy, just call [[PHONE]] NOW! Only 10p per minute. BT-national-rate.",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-098",
+      "input": "You've won tkts to the EURO2004 CUP FINAL or [[AMOUNT]] CASH, to collect CALL [[PHONE]] b4190604, POBOX 7876150ppm",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-099",
+      "input": "Guess what! Somebody you know secretly fancies you! Wanna find out who it is? Give us a call on [[PHONE]] from Landline DATEBox1282EssexCM61XN 150p/min 18",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-100",
+      "input": "okmail: Dear Dave this is your final notice to collect your 4* Tenerife Holiday or #5000 CASH award! Call [[PHONE]] from landline. TCs SAE Box326 CW25WX 150ppm",
+      "expected_is_scam": true
+    },
+    {
+      "id": "cls-101",
+      "input": "See the forwarding message for proof",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-102",
+      "input": "I'm in inside office..still filling forms.don know when they leave me.",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-103",
+      "input": "Tonight? Yeah, I'd be down for that",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-104",
+      "input": "Is there any movie theatre i can go to and watch unlimited movies and just pay once?",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-105",
+      "input": "I'm home, my love ... If your still awake ... *loving kiss*",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-106",
+      "input": "It\u2018s [[AMOUNT]] to get in, is that ok?",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-107",
+      "input": "You still around? I could use a half-8th",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-108",
+      "input": "I don't know, same thing that's wrong everyso often, he panicks starts goin on bout not bein good enough \u2026",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-109",
+      "input": "Ok ill send you with in  &lt;DECIMAL&gt;  ok.",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-110",
+      "input": "Aight sorry I take ten years to shower. What's the plan?",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-111",
+      "input": "Its posible dnt live in  &lt;#&gt; century cm frwd n thnk different",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-112",
+      "input": "Here got ur favorite oyster... N got my favorite sashimi... Ok lar i dun say already... Wait ur stomach start rumbling...",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-113",
+      "input": "A Boy loved a gal. He propsd bt she didnt mind. He gv lv lttrs, Bt her frnds threw thm. Again d boy decided 2 aproach d gal , dt time a truck was speeding towards d gal. Wn it was about 2 hit d girl,d boy ran like hell n saved her. She asked 'hw cn u run so fast?' D boy replied \"Boost is d secret of my energy\" n instantly d girl shouted \"our energy\" n Thy lived happily 2gthr drinking boost evrydy Moral of d story:- I hv free msgs:D;): gud ni8",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-114",
+      "input": "HCL chennai requires FRESHERS for voice process.Excellent english needed.Salary upto  &lt;#&gt; .Call Ms.Suman  &lt;#&gt;  for Telephonic interview -via Indyarocks.com",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-115",
+      "input": "Its just the effect of irritation. Just ignore it",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-116",
+      "input": "Motivate Behind every darkness, there is a shining light waiting for you to find it... Behind every best friend, there is always trust and love... BSLVYL",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-117",
+      "input": "By the way, i've put a skip right outside the front of the house so you can see which house it is. Just pull up before it.",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-118",
+      "input": "Hi, wlcome back, did wonder if you got eaten by a lion or something, nothing much",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-119",
+      "input": "But i haf enuff space got like 4 mb...",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-120",
+      "input": "Moji i love you more than words. Have a rich day",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-121",
+      "input": "My exam is for february 4. Wish you a great day.",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-122",
+      "input": "Im good! I have been thinking about you...",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-123",
+      "input": "Probably not, I'm almost out of gas and I get some cash tomorrow",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-124",
+      "input": "Yoyyooo u know how to change permissions for a drive in mac. My usb flash drive",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-125",
+      "input": "10 min later k...",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-126",
+      "input": "Then u drive lor.",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-127",
+      "input": "Ok good then i later come find \u00fc... C lucky i told \u00fc to go earlier... Later pple take finish \u00fc no more again...",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-128",
+      "input": "Should I have picked up a receipt or something earlier",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-129",
+      "input": "Hello. Sort of out in town already. That . So dont rush home, I am eating nachos. Will let you know eta.",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-130",
+      "input": "Neva mind it's ok..",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-131",
+      "input": "You know what hook up means right?",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-132",
+      "input": "Joy's father is John. Then John is the ____ of Joy's father. If u ans ths you hav  &lt;#&gt;  IQ. Tis s IAS question try to answer.",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-133",
+      "input": "Can u look 4 me in da lib i got stuff havent finish yet.",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-134",
+      "input": "Oh k. . I will come tomorrow",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-135",
+      "input": "Okey doke. I'm at home, but not dressed cos laying around ill! Speak to you later bout times and stuff.",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-136",
+      "input": "Gud gud..k, chikku tke care.. sleep well gud nyt",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-137",
+      "input": "What is the plural of the noun research?",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-138",
+      "input": "on hen night. Going with a swing",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-139",
+      "input": "Sorry i missed your call. Can you please call back.",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-140",
+      "input": "What's happening with you. Have you gotten a job and have you begun registration for permanent residency",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-141",
+      "input": "Don know:)this week i'm going to tirunelvai da.",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-142",
+      "input": "Where can download clear movies. Dvd copies.",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-143",
+      "input": "K, wat s tht incident?",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-144",
+      "input": "What you doing?how are you?",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-145",
+      "input": "Hey sweet, I was wondering when you had a moment if you might come to me ? I want to send a file to someone but it won't go over yahoo for them because their connection sucks, remember when you set up that page for me to go to and download the format disc ? Could you tell me how to do that ? Or do you know some other way to download big files ? Because they can download stuff directly from the internet. Any help would be great, my prey ... *teasing kiss*",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-146",
+      "input": "Aiyar hard 2 type. U later free then tell me then i call n scold n tell u.",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-147",
+      "input": "Yup... Ok i go home look at the timings then i msg \u00fc again... Xuhui going to learn on 2nd may too but her lesson is at 8am",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-148",
+      "input": "No da..today also i forgot..",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-149",
+      "input": "Not for possession, especially not first offense",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-150",
+      "input": "Yun ah.now \u00fc wkg where?btw if \u00fc go nus sc. \u00dc wana specialise in wad?",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-151",
+      "input": "How do you plan to manage that",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-152",
+      "input": "Yes da. Any plm at ur office",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-153",
+      "input": "Its normally hot mail. Com you see!",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-154",
+      "input": "I tot u outside cos darren say u come shopping. Of course we nice wat. We jus went sim lim look at mp3 player.",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-155",
+      "input": "Good evening! How are you?",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-156",
+      "input": "After completed degree. There is no use in joining finance.",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-157",
+      "input": "I REALLY NEED 2 KISS U I MISS U MY BABY FROM UR BABY 4EVA",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-158",
+      "input": "Great! How is the office today?",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-159",
+      "input": "Even my brother is not like to speak with me. They treat me like aids patent.",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-160",
+      "input": "Ok lor... But buy wat?",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-161",
+      "input": "I'm on the bus. Love you",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-162",
+      "input": "I'm sorry. I've joined the league of people that dont keep in touch. You mean a great deal to me. You have been a friend at all times even at great personal cost. Do have a great week.|",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-163",
+      "input": "Me too watching surya movie only. . .after 6 pm vijay movie POKKIRI",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-164",
+      "input": "Christmas is An occasion that is Celebrated as a Reflection of UR... Values..., Desires..., Affections...&amp; Traditions.... Have an ideal Christmas...",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-165",
+      "input": "Thanks chikku..:-) gud nyt:-*",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-166",
+      "input": "Love you aathi..love u lot..",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-167",
+      "input": "Ok. Every night take a warm bath drink a cup of milk and you'll see a work of magic. You still need to loose weight. Just so that you know",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-168",
+      "input": "Dont you have message offer",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-169",
+      "input": "I think your mentor is , but not 100 percent sure.",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-170",
+      "input": "Realy sorry-i don't recognise this number and am now confused :) who r u please?!",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-171",
+      "input": "Have a good evening! Ttyl",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-172",
+      "input": "And I don't plan on staying the night but I prolly won't be back til late",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-173",
+      "input": "Then mum's repent how?",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-174",
+      "input": "Dunno, my dad said he coming home 2 bring us out 4 lunch. Yup i go w u lor. I call u when i reach school lor...",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-175",
+      "input": "Yo, the game almost over? Want to go to walmart soon",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-176",
+      "input": "Dear relieved of westonzoyland, all going to plan this end too!",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-177",
+      "input": "Ok",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-178",
+      "input": "Babe, I'm answering you, can't you see me ? Maybe you'd better reboot YM ... I got the photo ... It's great !",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-179",
+      "input": "Sounds gd... Haha... Can... Wah, u yan jiu so fast liao...",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-180",
+      "input": "Yes.i'm in office da:)",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-181",
+      "input": "My drive can only be read. I need to write",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-182",
+      "input": "K...k...when will you give treat?",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-183",
+      "input": "Princess, is your kitty shaved or natural?",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-184",
+      "input": "Ding me on ya break fassyole! Blacko from londn",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-185",
+      "input": "Fffff. Can you text kadeem or are you too far gone",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-186",
+      "input": "Id have to check but there's only like 1 bowls worth left",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-187",
+      "input": "Where are you call me.",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-188",
+      "input": "Tyler (getting an 8th) has to leave not long after 9, can you get here in like an hour?",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-189",
+      "input": "I can\u0092t wait for cornwall. Hope tonight isn\u0092t too bad as well but it\u0092s rock night shite. Anyway i\u0092m going for a kip now have a good night. Speak to you soon.",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-190",
+      "input": "2 and half years i missed your friendship:-)",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-191",
+      "input": "I'm glad. You are following your dreams.",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-192",
+      "input": "Ok . . now i am in bus. . If i come soon i will come otherwise tomorrow",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-193",
+      "input": "I'll talk to the others and probably just come early tomorrow then",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-194",
+      "input": "But i juz remembered i gotta bathe my dog today..",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-195",
+      "input": "THANX4 TODAY CER IT WAS NICE 2 CATCH UP BUT WE AVE 2 FIND MORE TIME MORE OFTEN OH WELL TAKE CARE C U SOON.C",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-196",
+      "input": "Just curious because my cuz asked what I was up to",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-197",
+      "input": "U call me alter at 11 ok.",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-198",
+      "input": "Ok lor... Sony ericsson salesman... I ask shuhui then she say quite gd 2 use so i considering...",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-199",
+      "input": "Thank you princess! I want to see your nice juicy booty...",
+      "expected_is_scam": false
+    },
+    {
+      "id": "cls-200",
+      "input": "Yup i shd haf ard 10 pages if i add figures... \u00dc all got how many pages?",
+      "expected_is_scam": false
+    }
+  ]
+}
