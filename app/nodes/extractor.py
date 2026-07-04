@@ -53,7 +53,10 @@ async def tactic_extractor(ctx: Context, node_input: AdversarialTranscript) -> l
     classifier_output: ClassifierOutput = ctx.state.get("classifier_output")
     is_degraded = ctx.state.get("degraded", False)
     
-    # 1. Build prompt based on whether loop execution succeeded or degraded
+    # 1.5 Get detected language to write explanations in the correct language
+    detected_lang = ctx.state.get("detected_language", "en")
+    
+    # 2. Build prompt based on whether loop execution succeeded or degraded
     if is_degraded or not node_input.turns:
         hints_str = ", ".join(classifier_output.red_flag_hints) if classifier_output else "None"
         prompt = (
@@ -73,6 +76,13 @@ async def tactic_extractor(ctx: Context, node_input: AdversarialTranscript) -> l
             f"{transcript_str}\n"
         )
         
+    lang_instruction = ""
+    if detected_lang != "en":
+        lang_instruction = (
+            f"\nIMPORTANT: Write the 'explanation' field for each tactic in the language "
+            f"with ISO 639-1 code '{detected_lang}'. Do NOT translate the 'name', 'lever', or 'category' identifiers - only translate the explanation value."
+        )
+
     prompt += (
         "\nFormat your output as a structured list of tactics. For each tactic determine:\n"
         "- name: lowercase snake_case identifier (e.g. guaranteed_returns)\n"
@@ -81,6 +91,7 @@ async def tactic_extractor(ctx: Context, node_input: AdversarialTranscript) -> l
         "- explanation: plain language explanation for a non-expert victim\n"
         "- example_masked: example text snippet matching the tactic\n"
         "- category: the fraud category\n"
+        f"{lang_instruction}"
     )
     
     client = genai.Client()

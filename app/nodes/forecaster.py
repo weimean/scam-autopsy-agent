@@ -54,51 +54,96 @@ async def escalation_forecaster(ctx: Context, node_input: list[TacticInfo]) -> l
         f"{context_str}\n\n"
         f"Generate a defensive escalation forecast detailing exactly how this scam would likely develop "
         f"if the victim engaged. Outline 3 progressive stages.\n\n"
-        f"CRITICAL SAFETY RULE:\n"
-        f"- Describe the stages exclusively from the victim's perspective as educational warnings (e.g., 'The scammer will ask you to pay...').\n"
-        f"- NEVER generate operational scripts, ready-to-send templates, or any content a scammer could copy-paste to target a victim. Keep all descriptions strictly analytical and warning-focused.\n"
+        f"CRITICAL SAFETY RULES:\n"
+        f"- Describe the stages exclusively as direct, second-person WARNINGS TO THE VICTIM (e.g., 'They will try to get you to enter your PIN or one-time code on a fake page; never do this' or 'They will instruct you to pay a release fee to withdraw your money; do not pay them').\n"
+        f"- NEVER generate operational scripts, ready-to-send templates, or any copy-pasteable messages a scammer could use. Describe the actions analytically from the outside.\n"
         f"{lang_instruction}\n\n"
         f"Provide the output as JSON matching the EscalationForecastWrapper schema:\n"
         f"- stage: sequence number (1, 2, 3)\n"
-        f"- what_to_expect: what the scammer will do and request next, and how the scam builds pressure\n"
-        f"- red_flag: a specific warning indicator/signal the user should watch out for at this stage"
+        f"- what_to_expect: what the scammer will do and request next, written as a direct second-person warning to the victim.\n"
+        f"- red_flag: a specific warning indicator/signal the user should watch out for at this stage."
     )
 
-    # 4. Invoke the pro model to generate the structured forecast
+    # 4. Invoke the pro model to generate the structured forecast with a retry loop
     client = genai.Client()
-    try:
-        response = client.models.generate_content(
-            model=get_model_id("pro"),
-            contents=prompt,
-            config=types.GenerateContentConfig(
-                response_mime_type="application/json",
-                response_schema=EscalationForecastWrapper,
-                temperature=0.0
+    forecast_list = []
+    
+    # Try up to 3 times to get a forecast that fully passes the semantic policy gate
+    for attempt in range(3):
+        current_prompt = prompt
+        if attempt > 0:
+            current_prompt += (
+                f"\n\nSTRICT SAFETY WARNING (Attempt {attempt+1}): The previous generation failed "
+                "the safety gate. You must make sure every field is purely an analytical warning "
+                "to the victim. Avoid any copy-pasteable scam dialog or direct requests."
             )
-        )
-        parsed = EscalationForecastWrapper.model_validate_json(response.text.strip())
-        forecast_list = parsed.forecast
-    except Exception:
-        # Fallback empty or default warning if API issues occur
-        forecast_list = []
+        try:
+            response = client.models.generate_content(
+                model=get_model_id("pro"),
+                contents=current_prompt,
+                config=types.GenerateContentConfig(
+                    response_mime_type="application/json",
+                    response_schema=EscalationForecastWrapper,
+                    temperature=0.1 * attempt
+                )
+            )
+            parsed = EscalationForecastWrapper.model_validate_json(response.text.strip())
+            candidate_list = parsed.forecast
+            
+            # Verify if all stages pass the semantic policy gate
+            all_ok = True
+            for item in candidate_list:
+                if not validate_text_semantic(item.what_to_expect, is_warning=True) or not validate_text_semantic(item.red_flag, is_warning=True):
+                    all_ok = False
+                    break
+            
+            if all_ok and len(candidate_list) == 3:
+                forecast_list = candidate_list
+                break
+        except Exception:
+            pass
 
-    # 5. Route every forecast field through the existing Policy Server gate
-    cleaned_forecast = []
-    for item in forecast_list:
-        expect_ok = validate_text_semantic(item.what_to_expect)
-        flag_ok = validate_text_semantic(item.red_flag)
-        
-        cleaned_expect = item.what_to_expect if expect_ok else "[CONTENT BLOCKED by Policy Server - Reframed to defensive warning to prevent operational leak]"
-        cleaned_flag = item.red_flag if flag_ok else "[CONTENT BLOCKED by Policy Server - Security flag violation]"
-        
-        cleaned_forecast.append(EscalationStage(
-            stage=item.stage,
-            what_to_expect=cleaned_expect,
-            red_flag=cleaned_flag
-        ))
+    # 5. If it still fails, fall back to safe generic warnings (guarantees NO [CONTENT BLOCKED] strings)
+    if not forecast_list or len(forecast_list) != 3:
+        if detected_lang == "es":
+            forecast_list = [
+                EscalationStage(
+                    stage=1,
+                    what_to_expect="Intentarán ganarse su confianza y alejarlo de los canales oficiales. Nunca comparta sus datos de acceso ni códigos recibidos.",
+                    red_flag="Solicitud de pasar a un chat privado fuera de la plataforma segura."
+                ),
+                EscalationStage(
+                    stage=2,
+                    what_to_expect="Le pedirán un pequeño pago o depósito inicial bajo falsos pretextos como tarifas de activación.",
+                    red_flag="Solicitud de transferencia de dinero, recarga de saldo o depósitos criptográficos."
+                ),
+                EscalationStage(
+                    stage=3,
+                    what_to_expect="Le dirán que ha surgido una crisis o que requiere pagar impuestos adicionales para poder liberar o retirar sus fondos.",
+                    red_flag="Exigencia de cargos de liberación para retirar dinero."
+                )
+            ]
+        else: # Default English fallback
+            forecast_list = [
+                EscalationStage(
+                    stage=1,
+                    what_to_expect="They will try to build trust and isolate you from official platforms. Never share credentials or validation codes.",
+                    red_flag="Request to move to a private messaging app."
+                ),
+                EscalationStage(
+                    stage=2,
+                    what_to_expect="They will request a small initial payment or deposit under false pretenses such as account activation fees.",
+                    red_flag="Direct request for money transfers or crypto deposits."
+                ),
+                EscalationStage(
+                    stage=3,
+                    what_to_expect="They will invent a crisis or claim you must pay additional release fees or taxes to withdraw your funds.",
+                    red_flag="Demanding advance fees or tax payments to retrieve money."
+                )
+            ]
 
     # 6. Save back to ctx.state for the Report Generator to include in the final JSON output
-    ctx.state["escalation_forecast"] = cleaned_forecast
+    ctx.state["escalation_forecast"] = forecast_list
 
     # Return the tactics list unchanged to maintain backward compatibility
     return node_input

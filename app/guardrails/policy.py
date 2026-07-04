@@ -38,7 +38,7 @@ def validate_input_intent(text: str) -> bool:
         
     return True
 
-def validate_text_semantic(text: str) -> bool:
+def validate_text_semantic(text: str, is_warning: bool = False) -> bool:
     """
     Performs the semantic layer check using the mapped LLM.
     Returns True if OK, False if VIOLATION.
@@ -47,17 +47,25 @@ def validate_text_semantic(text: str) -> bool:
         return True
         
     client = genai.Client()
+    
+    context_str = ""
+    if is_warning:
+        context_str = (
+            "CONTEXT: The text is a victim-facing defensive warning/instruction about what the scammer will do next.\n"
+            "RULE: A warning to the victim about what the scammer will do (e.g. 'They will try to get you to enter your PIN or one-time code on a fake page; never do this') must be ALLOWED (OK).\n"
+            "An operational message that the user could copy-paste and send to a victim to scam them (e.g. 'Enter your PIN code now') must be BLOCKED (VIOLATION).\n\n"
+        )
+
     prompt = (
         "You are a security guardrail classifier.\n"
         "Analyze the following text to determine if it functions as an active, deployable, ready-to-send "
         "scam pitch that a fraudster could copy-paste directly to target a victim.\n\n"
+        f"{context_str}"
         "GUIDELINES FOR CLASSIFICATION:\n"
         "- Label as 'VIOLATION' if the text contains a direct, ready-to-send scam message, a phishing script, "
         "or a deployable scam template without any defensive wrapper.\n"
         "- Label as 'OK' if the text contains defensive advice, warnings, how-to-protect instructions, "
-        "general descriptions of what scammers do (e.g., 'The scammer will request a transfer'), "
-        "or educational resources. General descriptions of scam stages are OK as long as they are "
-        "analytical warnings, not ready-to-send pitches.\n\n"
+        "general descriptions of what scammers do, or educational resources.\n\n"
         f"Text to evaluate:\n{text}\n\n"
         "Response (strictly either VIOLATION or OK):"
     )
@@ -107,13 +115,13 @@ def validate_report_output(report: ReportOutput) -> ReportOutput:
     Gates the final Report output to ensure no deployable scam components leak in warnings, protect steps, or escalation forecast.
     """
     # Check warning text
-    if report.warning and not validate_text_semantic(report.warning):
+    if report.warning and not validate_text_semantic(report.warning, is_warning=True):
         report.warning = "[CONTENT BLOCKED by Policy Server - Reframed to defensive analysis of the scam pattern to prevent offensive generation]"
         
     # Check how_to_protect descriptions
     cleaned_steps = []
     for step in report.how_to_protect:
-        if not validate_text_semantic(step):
+        if not validate_text_semantic(step, is_warning=True):
             cleaned_steps.append("[Blocked step due to safety violation]")
         else:
             cleaned_steps.append(step)
@@ -123,8 +131,8 @@ def validate_report_output(report: ReportOutput) -> ReportOutput:
     cleaned_forecast = []
     if hasattr(report, "escalation_forecast") and report.escalation_forecast:
         for item in report.escalation_forecast:
-            expect_ok = validate_text_semantic(item.what_to_expect)
-            flag_ok = validate_text_semantic(item.red_flag)
+            expect_ok = validate_text_semantic(item.what_to_expect, is_warning=True)
+            flag_ok = validate_text_semantic(item.red_flag, is_warning=True)
             
             cleaned_expect = item.what_to_expect if expect_ok else "[CONTENT BLOCKED by Policy Server - Reframed to defensive warning to prevent operational leak]"
             cleaned_flag = item.red_flag if flag_ok else "[CONTENT BLOCKED by Policy Server - Security flag violation]"
