@@ -17,7 +17,7 @@ def get_model_id(role: str) -> str:
         elif role == "judge":
             return "gemini-2.5-pro"
     else:
-        # AI Studio free tier fallbacks to avoid the 20 RPD limit
-        return "gemini-2.5-flash-lite"
+        # AI Studio free tier fallbacks to avoid the limit
+        return "gemini-3.1-flash-lite"
         
     return "gemini-3.1-flash-lite"
