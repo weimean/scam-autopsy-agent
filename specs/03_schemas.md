@@ -65,6 +65,10 @@ report:
   disclaimer: str           # "educational, not legal/financial advice"
   kb_stat: str              # "tactics catalogued: N" — collective-intelligence signal
   language: str             # ISO 639-1 code; report is written in this language
+  escalation_forecast:      # defensive preview of what happens next if engaged
+    - stage: int
+      what_to_expect: str
+      red_flag: str
 ```
 
 ## Adversarial loop control

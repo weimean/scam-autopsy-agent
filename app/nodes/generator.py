@@ -83,7 +83,8 @@ async def report_generator(
             reporting_links=[],
             disclaimer="educational, not legal/financial advice",
             kb_stat=kb_stat,
-            language=detected_lang
+            language=detected_lang,
+            escalation_forecast=[]
         ))
 
     # 3. Handle benign messages (ham) without calling LLM (token optimization)
@@ -105,7 +106,8 @@ async def report_generator(
             ],
             disclaimer="educational, not legal/financial advice",
             kb_stat=kb_stat,
-            language=detected_lang
+            language=detected_lang,
+            escalation_forecast=[]
         ))
 
     # 4. Synthesize scam warning/guidance using gemini-3.1-pro
@@ -147,6 +149,8 @@ async def report_generator(
     
     synthesized = SynthesizedReport.model_validate_json(response.text.strip())
     
+    forecast = ctx.state.get("escalation_forecast", [])
+
     return validate_report_output(ReportOutput(
         verdict=VerdictInfo(
             is_scam=True,
@@ -159,5 +163,6 @@ async def report_generator(
         reporting_links=synthesized.reporting_links,
         disclaimer="educational, not legal/financial advice",
         kb_stat=kb_stat,
-        language=detected_lang
+        language=detected_lang,
+        escalation_forecast=forecast
     ))

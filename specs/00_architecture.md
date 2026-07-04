@@ -29,9 +29,14 @@ INPUT → │  Intake &    │  normalize message, mask PII → placeholders
         │   Extractor  │  dedup vs KB; write NEW tactics → scam-intel MCP
         └──────┬───────┘
         ┌──────▼───────┐
+        │  Escalation  │  read transcript + tactics, predict future path
+        │  Forecaster  │  exclusively from victim's perspective (defensive warning)
+        └──────┬───────┘
+        ┌──────▼───────┐
         │   Report     │  verdict + tactics + plain-language warning
         │   Generator  │  + how-to-protect + reporting links + disclaimer
         └──────────────┘
+```
 ```
 
 ## Components (see 03_schemas.md for I/O contracts)
@@ -41,6 +46,7 @@ INPUT → │  Intake &    │  normalize message, mask PII → placeholders
 | Scammer (red-team) | sandboxed replay to surface tactics; outputs `SIMULATION:` + length-capped | flash-lite |
 | Guardian (blue-team) | counter each move, name the lever, probe; reads scam-intel MCP | flash-lite |
 | Tactic Extractor | map transcript → taxonomy; dedup; write new tactics → MCP | pro |
+| Escalation Forecaster | predict future path defensively, route via Policy Server | pro |
 | Report Generator | assemble the report contract | pro |
 
 ## `scam-intel` MCP server (SQLite, stdio)

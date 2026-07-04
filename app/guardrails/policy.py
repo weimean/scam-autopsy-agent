@@ -97,7 +97,7 @@ def validate_scammer_output(text: str) -> str:
 
 def validate_report_output(report: ReportOutput) -> ReportOutput:
     """
-    Gates the final Report output to ensure no deployable scam components leak in warnings or protect steps.
+    Gates the final Report output to ensure no deployable scam components leak in warnings, protect steps, or escalation forecast.
     """
     # Check warning text
     if report.warning and not validate_text_semantic(report.warning):
@@ -112,4 +112,21 @@ def validate_report_output(report: ReportOutput) -> ReportOutput:
             cleaned_steps.append(step)
     report.how_to_protect = cleaned_steps
     
+    # Check escalation forecast descriptions and red flags
+    cleaned_forecast = []
+    if hasattr(report, "escalation_forecast") and report.escalation_forecast:
+        for item in report.escalation_forecast:
+            expect_ok = validate_text_semantic(item.what_to_expect)
+            flag_ok = validate_text_semantic(item.red_flag)
+            
+            cleaned_expect = item.what_to_expect if expect_ok else "[CONTENT BLOCKED by Policy Server - Reframed to defensive warning to prevent operational leak]"
+            cleaned_flag = item.red_flag if flag_ok else "[CONTENT BLOCKED by Policy Server - Security flag violation]"
+            
+            cleaned_forecast.append(item.__class__(
+                stage=item.stage,
+                what_to_expect=cleaned_expect,
+                red_flag=cleaned_flag
+            ))
+        report.escalation_forecast = cleaned_forecast
+        
     return report

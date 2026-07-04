@@ -56,7 +56,8 @@ def get_mock_response(text: str) -> dict:
                         "reporting_links": [],
                         "disclaimer": "educational, not legal/financial advice",
                         "kb_stat": "tactics catalogued: 12",
-                        "language": "en"
+                        "language": "en",
+                        "escalation_forecast": []
                     }
                 else:
                     return {
@@ -67,7 +68,8 @@ def get_mock_response(text: str) -> dict:
                         "reporting_links": [{"label": "FTC", "url": "https://ftc.gov"}],
                         "disclaimer": "educational, not legal/financial advice",
                         "kb_stat": "tactics catalogued: 12",
-                        "language": "en"
+                        "language": "en",
+                        "escalation_forecast": []
                     }
     except Exception:
         pass
@@ -93,7 +95,14 @@ def get_mock_response(text: str) -> dict:
                     "reporting_links": [],
                     "disclaimer": "educational, not legal/financial advice",
                     "kb_stat": "tactics catalogued: 12",
-                    "language": "en"
+                    "language": "en",
+                    "escalation_forecast": [
+                        {
+                            "stage": 1,
+                            "what_to_expect": "The scammer will try to build trust and offer guaranteed returns.",
+                            "red_flag": "Promises of zero risk and high returns."
+                        }
+                    ]
                 }
     except Exception:
         pass
@@ -118,7 +127,8 @@ def get_mock_response(text: str) -> dict:
                     "reporting_links": [],
                     "disclaimer": "educational, not legal/financial advice",
                     "kb_stat": "tactics catalogued: 12",
-                    "language": "en"
+                    "language": "en",
+                    "escalation_forecast": []
                 }
     except Exception:
         pass
@@ -131,7 +141,8 @@ def get_mock_response(text: str) -> dict:
         "reporting_links": [],
         "disclaimer": "educational",
         "kb_stat": "tactics catalogued: 12",
-        "language": "en"
+        "language": "en",
+        "escalation_forecast": []
     }
 
 def get_mock_judge_score(expected_levers: list[str], actual_levers: list[str]) -> dict:

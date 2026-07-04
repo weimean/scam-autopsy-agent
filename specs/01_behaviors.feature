@@ -52,3 +52,10 @@ Feature: Scam Autopsy analysis
     Then it returns is_scam=true with correct levers including "urgency" and "authority"
     And detected_language is "es"
     And the report (warning, how_to_protect, disclaimer) is written in Spanish
+
+  Scenario: A romance scam is analyzed and contains a defensive escalation forecast
+    Given a romance scam is submitted to the agent
+    When the Escalation Forecaster runs
+    Then the report includes an escalation_forecast list detailing trust-building, a small request, a crisis, and a larger demand
+    And all escalation_forecast texts pass the Policy Server and contain no deployable scam templates
+

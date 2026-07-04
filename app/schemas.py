@@ -20,6 +20,12 @@ class ReportingLink(BaseModel):
     label: str
     url: str
 
+class EscalationStage(BaseModel):
+    """Represents a likely future stage of engagement in the scam."""
+    stage: int
+    what_to_expect: str
+    red_flag: str
+
 class VerdictInfo(BaseModel):
     """Autopsy final verdict details."""
     is_scam: bool
@@ -36,6 +42,7 @@ class ReportOutput(BaseModel):
     disclaimer: str = Field(default="educational, not legal/financial advice")
     kb_stat: str = Field(..., description="tactics catalogued: N")
     language: str = Field(default="en", description="ISO 639-1 code; report is written in this language")
+    escalation_forecast: list[EscalationStage] = Field(default_factory=list, description="Defensive forecast of likely escalation stages")
 
 class AdversarialTurn(BaseModel):
     """A single dialogue turn in the adversarial exchange."""

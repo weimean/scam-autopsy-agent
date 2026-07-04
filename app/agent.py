@@ -23,6 +23,7 @@ from app.nodes.intake import intake_classifier
 from app.nodes.adversarial import adversarial_core
 from app.nodes.extractor import tactic_extractor
 from app.nodes.generator import report_generator
+from app.nodes.forecaster import escalation_forecaster
 from app.schemas import ClassifierOutput, ReportOutput
 
 # Ensure GCP configuration is loaded
@@ -70,7 +71,8 @@ edges = [
     
     # 3. Rest of the scam detection path
     (adversarial_core, tactic_extractor),
-    (tactic_extractor, report_generator),
+    (tactic_extractor, escalation_forecaster),
+    (escalation_forecaster, report_generator),
 ]
 
 root_agent = Workflow(
