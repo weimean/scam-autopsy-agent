@@ -50,7 +50,11 @@ async def tactic_extractor(ctx: Context, node_input: AdversarialTranscript) -> l
     adversarial loop was degraded) into the persuasion lever taxonomy. New tactics are persisted
     globally into the SQLite knowledge base using deduplication on (name, category) via UNIQUE constraints.
     """
-    classifier_output: ClassifierOutput = ctx.state.get("classifier_output")
+    classifier_output_state = ctx.state.get("classifier_output")
+    if isinstance(classifier_output_state, dict):
+        classifier_output = ClassifierOutput(**classifier_output_state)
+    else:
+        classifier_output = classifier_output_state
     is_degraded = ctx.state.get("degraded", False)
     
     # 1.5 Get detected language to write explanations in the correct language

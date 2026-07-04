@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field
 from google import genai
 from google.genai import types
 from google.adk.agents.context import Context
-from app.schemas import ClassifierOutput, TacticInfo, ReportOutput, VerdictInfo, ReportingLink
+from app.schemas import ClassifierOutput, TacticInfo, ReportOutput, VerdictInfo, ReportingLink, EscalationStage
 from app.guardrails.policy import validate_report_output
 from app.tools.model_routing import get_model_id
 
@@ -149,7 +149,13 @@ async def report_generator(
     
     synthesized = SynthesizedReport.model_validate_json(response.text.strip())
     
-    forecast = ctx.state.get("escalation_forecast", [])
+    forecast_state = ctx.state.get("escalation_forecast", [])
+    forecast = []
+    for item in forecast_state:
+        if isinstance(item, dict):
+            forecast.append(EscalationStage(**item))
+        else:
+            forecast.append(item)
 
     return validate_report_output(ReportOutput(
         verdict=VerdictInfo(

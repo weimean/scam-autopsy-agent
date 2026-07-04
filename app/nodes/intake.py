@@ -29,7 +29,7 @@ async def intake_classifier(ctx: Context, node_input: str) -> ClassifierOutput:
             masked_text=masked,
             detected_language="en"
         )
-        ctx.state["classifier_output"] = result
+        ctx.state["classifier_output"] = result.model_dump()
         ctx.state["detected_language"] = "en"
         return result
         
@@ -62,7 +62,7 @@ async def intake_classifier(ctx: Context, node_input: str) -> ClassifierOutput:
     result.masked_text = masked
     
     # Store in context state for downstream nodes (like report generator)
-    ctx.state["classifier_output"] = result
+    ctx.state["classifier_output"] = result.model_dump()
     # WHY: Store detected_language separately so the Report Generator can write in
     # the same language as the input, making the report useful to non-English speakers
     ctx.state["detected_language"] = result.detected_language

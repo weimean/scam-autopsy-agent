@@ -18,8 +18,18 @@ async def escalation_forecaster(ctx: Context, node_input: list[TacticInfo]) -> l
     It passes every output field through the existing semantic Policy Server to ensure
     no operational scam content/scripts are ever generated.
     """
-    classifier_output: ClassifierOutput = ctx.state.get("classifier_output")
-    transcript: AdversarialTranscript = ctx.state.get("adversarial_transcript")
+    classifier_output_state = ctx.state.get("classifier_output")
+    if isinstance(classifier_output_state, dict):
+        classifier_output = ClassifierOutput(**classifier_output_state)
+    else:
+        classifier_output = classifier_output_state
+
+    transcript_state = ctx.state.get("adversarial_transcript")
+    if isinstance(transcript_state, dict):
+        transcript = AdversarialTranscript(**transcript_state)
+    else:
+        transcript = transcript_state
+
     detected_lang = ctx.state.get("detected_language", "en")
     is_degraded = ctx.state.get("degraded", False)
 
@@ -142,8 +152,11 @@ async def escalation_forecaster(ctx: Context, node_input: list[TacticInfo]) -> l
                 )
             ]
 
-    # 6. Save back to ctx.state for the Report Generator to include in the final JSON output
-    ctx.state["escalation_forecast"] = forecast_list
+    # 6. Save back to ctx.state for the Report Generator to include in the final JSON output (JSON serializable)
+    ctx.state["escalation_forecast"] = [
+        item.model_dump() if hasattr(item, "model_dump") else item 
+        for item in forecast_list
+    ]
 
     # Return the tactics list unchanged to maintain backward compatibility
     return node_input

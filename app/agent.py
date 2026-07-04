@@ -44,17 +44,18 @@ else:
 
 def check_scam(node_input: ClassifierOutput) -> Event:
     """Route based on whether a scam is detected with high confidence."""
-    # Store classifier output in state for the generator node to access
+    # Store classifier output in state for the generator node to access safely (JSON serializable)
+    c_out = node_input.model_dump() if hasattr(node_input, "model_dump") else node_input
     if node_input.is_scam and node_input.confidence >= 0.5:
         return Event(
             output=node_input,
             route="scam",
-            state={"classifier_output": node_input}
+            state={"classifier_output": c_out}
         )
     return Event(
         output=node_input,
         route="no_scam",
-        state={"classifier_output": node_input}
+        state={"classifier_output": c_out}
     )
 
 # Edge definitions mapping the system flow

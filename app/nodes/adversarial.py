@@ -66,5 +66,5 @@ async def adversarial_core(ctx: Context, node_input: ClassifierOutput) -> Advers
         ctx.state["degradation_reason"] = f"Loop execution error: {str(e)}"
         
     transcript = AdversarialTranscript(turns=turns)
-    ctx.state["adversarial_transcript"] = transcript
+    ctx.state["adversarial_transcript"] = transcript.model_dump()
     return transcript
