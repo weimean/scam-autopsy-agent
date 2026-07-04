@@ -5,6 +5,7 @@ from google import genai
 from google.genai import types
 from google.adk.agents.context import Context
 from app.schemas import ClassifierOutput, TacticInfo, ReportOutput, VerdictInfo, ReportingLink
+from app.guardrails.policy import validate_report_output
 
 class SynthesizedReport(BaseModel):
     warning: str = Field(..., description="1-2 sentence warning about this specific scam")
@@ -61,7 +62,7 @@ async def report_generator(
 
     # 3. Handle benign messages (ham) without calling LLM (token optimization)
     if not classifier_output.is_scam:
-        return ReportOutput(
+        return validate_report_output(ReportOutput(
             verdict=VerdictInfo(
                 is_scam=False,
                 confidence=classifier_output.confidence,
@@ -78,7 +79,7 @@ async def report_generator(
             ],
             disclaimer="educational, not legal/financial advice",
             kb_stat=kb_stat
-        )
+        ))
 
     # 4. Synthesize scam warning/guidance using gemini-3.1-pro
     client = genai.Client()
@@ -107,7 +108,7 @@ async def report_generator(
     
     synthesized = SynthesizedReport.model_validate_json(response.text.strip())
     
-    return ReportOutput(
+    return validate_report_output(ReportOutput(
         verdict=VerdictInfo(
             is_scam=True,
             confidence=classifier_output.confidence,
@@ -119,4 +120,4 @@ async def report_generator(
         reporting_links=synthesized.reporting_links,
         disclaimer="educational, not legal/financial advice",
         kb_stat=kb_stat
-    )
+    ))

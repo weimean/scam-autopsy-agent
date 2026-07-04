@@ -4,7 +4,7 @@ from google.adk.agents.context import Context
 from app.schemas import ClassifierOutput, AdversarialTranscript, AdversarialTurn
 from app.agents.scammer import query_scammer
 from app.agents.guardian import query_guardian
-from app.tools.policy_server import validate_scammer_output
+from app.guardrails.policy import validate_scammer_output
 
 async def adversarial_core(ctx: Context, node_input: ClassifierOutput) -> AdversarialTranscript:
     """
