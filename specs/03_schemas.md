@@ -10,6 +10,7 @@ classifier_output:
   category: str            # one of 02_taxonomy.md categories, or "unknown"
   red_flag_hints: [str]    # cheap surface signals; also feeds graceful degradation
   masked_text: str         # PII already replaced with placeholders
+  detected_language: str   # ISO 639-1 code (e.g. "en", "es", "fr"); detected at intake
 ```
 
 ## PII placeholders (applied at intake, before anything else)
@@ -63,6 +64,7 @@ report:
     - {label: str, url: str}
   disclaimer: str           # "educational, not legal/financial advice"
   kb_stat: str              # "tactics catalogued: N" — collective-intelligence signal
+  language: str             # ISO 639-1 code; report is written in this language
 ```
 
 ## Adversarial loop control

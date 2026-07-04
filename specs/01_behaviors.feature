@@ -45,3 +45,10 @@ Feature: Scam Autopsy analysis
     Given the adversarial loop errors or exceeds 6 turns or times out
     When the graph continues
     Then a verdict and a plain-language warning are still produced from the classifier hints
+
+  Scenario: A Spanish-language phishing SMS is correctly detected and reported in Spanish
+    Given a user forwards "ALERTA: Su cuenta bancaria ha sido suspendida. Verifique su identidad inmediatamente en [[URL]] o perderá acceso permanente."
+    When the agent analyzes it
+    Then it returns is_scam=true with correct levers including "urgency" and "authority"
+    And detected_language is "es"
+    And the report (warning, how_to_protect, disclaimer) is written in Spanish

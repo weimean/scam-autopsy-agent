@@ -12,7 +12,8 @@ async def intake_classifier(ctx: Context, node_input: str) -> ClassifierOutput:
     WHY: This node acts as the system entrypoint. It performs regex-based PII masking
     first to prevent raw user sensitive data from being sent to the LLM or persistent store.
     It then uses gemini-3.1-flash-lite to classify the sanitized text, determining scam status,
-    confidence, category, and extracting surface-level red flag hints.
+    confidence, category, extracting surface-level red flag hints, and detecting the input
+    language (ISO 639-1) so the report can be written in the same language.
     """
     # 1. Mask PII immediately to protect user privacy
     masked = mask_pii(node_input)
@@ -25,12 +26,14 @@ async def intake_classifier(ctx: Context, node_input: str) -> ClassifierOutput:
             confidence=1.0,
             category="unknown",
             red_flag_hints=["Safety Policy Violation"],
-            masked_text=masked
+            masked_text=masked,
+            detected_language="en"
         )
         ctx.state["classifier_output"] = result
+        ctx.state["detected_language"] = "en"
         return result
         
-    # 2. Query gemini-3.1-flash-lite for structured classification
+    # 2. Query gemini-3.1-flash-lite for structured classification + language detection
     client = genai.Client()
     prompt = (
         f"Analyze this forwarded message and classify it according to safety rules:\n\n"
@@ -40,6 +43,7 @@ async def intake_classifier(ctx: Context, node_input: str) -> ClassifierOutput:
         f"- confidence (float, 0.0 to 1.0)\n"
         f"- category (one of: crypto_investment, romance, phishing, prize_lottery, tech_support, advance_fee, impersonation_bec, or 'unknown')\n"
         f"- red_flag_hints (list of strings representing surface red flags, e.g., deadline pressure, unsolicited wire change request)\n"
+        f"- detected_language (ISO 639-1 two-letter code of the message language, e.g. 'en', 'es', 'fr', 'tl')\n"
     )
     
     response = client.models.generate_content(
@@ -59,5 +63,8 @@ async def intake_classifier(ctx: Context, node_input: str) -> ClassifierOutput:
     
     # Store in context state for downstream nodes (like report generator)
     ctx.state["classifier_output"] = result
+    # WHY: Store detected_language separately so the Report Generator can write in
+    # the same language as the input, making the report useful to non-English speakers
+    ctx.state["detected_language"] = result.detected_language
     
     return result

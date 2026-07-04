@@ -7,6 +7,7 @@ class ClassifierOutput(BaseModel):
     category: str = Field(..., description="Tactics category or 'unknown'")
     red_flag_hints: list[str] = Field(default_factory=list, description="Cheap surface signals for fallback/degradation")
     masked_text: str = Field(..., description="Raw text with PII masked with placeholders")
+    detected_language: str = Field(default="en", description="ISO 639-1 language code detected at intake")
 
 class TacticInfo(BaseModel):
     """Details of a surfaced tactic in the final report."""
@@ -34,6 +35,7 @@ class ReportOutput(BaseModel):
     reporting_links: list[ReportingLink] = Field(default_factory=list)
     disclaimer: str = Field(default="educational, not legal/financial advice")
     kb_stat: str = Field(..., description="tactics catalogued: N")
+    language: str = Field(default="en", description="ISO 639-1 code; report is written in this language")
 
 class AdversarialTurn(BaseModel):
     """A single dialogue turn in the adversarial exchange."""

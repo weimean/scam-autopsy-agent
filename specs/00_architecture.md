@@ -59,6 +59,16 @@ KB **persists globally**; per-case state (transcript, tactics) lives in the sess
 If the adversarial loop errors or exceeds its bounds, skip Core and go Classifier →
 Report Generator using `red_flag_hints`. A verdict + warning **always** ship.
 
+## Multi-language analysis
+- **Intake** detects the message language (ISO 639-1 code) and stores it as
+  `detected_language` in `classifier_output`.
+- **Analysis runs in the original language.** Gemini is natively multilingual; there is
+  no forced translation step. PII regex masking is already language-agnostic.
+- **Taxonomy is language-agnostic.** Lever names and categories (e.g. `urgency`,
+  `phishing`) remain English identifiers regardless of input language.
+- **Report Generator writes the report in the detected language**, so a non-English
+  speaker gets a warning, how-to-protect steps, and disclaimer they can actually read.
+
 ## Evaluation (build FIRST — EDD; see blueprint §4 Phase 2)
 - **Classifier F1 + false-positive-rate** on a PUBLIC dataset (UCI SMS Spam + aggregated
   Kaggle phishing CSV + SpamAssassin/Enron ham) — de-biases the headline metric.

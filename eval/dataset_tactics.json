@@ -150,6 +150,36 @@
       "category": "tech_support",
       "expected_levers": ["authority", "fear", "urgency"],
       "expected_tactics": ["infected_device"]
+    },
+    {
+      "id": "tac-19",
+      "message": "ALERTA: Su cuenta bancaria ha sido suspendida por actividad sospechosa. Verifique su identidad inmediatamente en [[URL]] o perderá acceso permanente. Tiene 24 horas.",
+      "is_scam": true,
+      "category": "phishing",
+      "expected_levers": ["urgency", "authority", "fear"],
+      "expected_tactics": ["account_verify_link", "deadline_pressure"],
+      "language": "es",
+      "notes": "Spanish-language phishing SMS — tests multi-language detection and lever extraction"
+    },
+    {
+      "id": "tac-20",
+      "message": "Cher bénéficiaire, je suis un directeur de banque au Togo. Un client portant votre nom de famille est décédé en laissant [[AMOUNT]] non réclamés. Envoyez des frais de transfert et nous partageons 50/50. Strictement confidentiel.",
+      "is_scam": true,
+      "category": "advance_fee",
+      "expected_levers": ["authority", "reciprocity"],
+      "expected_tactics": ["inheritance_beneficiary"],
+      "language": "fr",
+      "notes": "French-language advance-fee scam — tests multi-language detection for French"
+    },
+    {
+      "id": "tac-21",
+      "message": "Binabati kita! Nanalo ka ng [[AMOUNT]] sa International SMS Raffle! Kailangan mong magbayad ng [[AMOUNT]] processing fee para makuha ang premyo. Mag-click sa [[URL]] ngayon bago mag-expire ang claim mo sa loob ng 24 oras.",
+      "is_scam": true,
+      "category": "prize_lottery",
+      "expected_levers": ["scarcity", "urgency", "reciprocity"],
+      "expected_tactics": ["you_have_won", "release_fee"],
+      "language": "tl",
+      "notes": "Tagalog-language prize/lottery scam — tests multi-language detection for Tagalog/Filipino"
     }
   ]
 }
