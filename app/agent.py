@@ -87,3 +87,35 @@ app = App(
     root_agent=root_agent,
     name="app",
 )
+
+if __name__ == "__main__":
+    import argparse
+    import asyncio
+    import json
+    from google.genai import types
+    from google.adk.runners import InMemoryRunner
+
+    parser = argparse.ArgumentParser(description="Run Scam Autopsy on a single message.")
+    parser.add_argument("--message", required=True, help="The suspicious scam message to analyze.")
+    args = parser.parse_args()
+
+    async def run_single():
+        runner = InMemoryRunner(app=app)
+        session = await runner.session_service.create_session(app_name=runner.app_name, user_id="cli_user")
+        result = None
+        async for event in runner.run_async(
+            user_id="cli_user",
+            session_id=session.id,
+            new_message=types.Content(role="user", parts=[types.Part.from_text(text=args.message)]),
+        ):
+            if event.output is not None:
+                result = event.output
+        if result:
+            if hasattr(result, "model_dump_json"):
+                print(result.model_dump_json(indent=2))
+            else:
+                print(json.dumps(result, indent=2, ensure_ascii=False))
+        else:
+            print("No report generated.")
+
+    asyncio.run(run_single())
