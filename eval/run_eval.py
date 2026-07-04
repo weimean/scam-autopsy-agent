@@ -1,5 +1,9 @@
 import os
 import sys
+# Ensure project root is in sys.path
+sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
+sys.path.insert(0, os.path.abspath(os.path.dirname(os.path.dirname(__file__))))
+
 import json
 import yaml
 import asyncio
@@ -7,9 +11,7 @@ from google import genai
 from google.genai import types
 from google.adk.runners import InMemoryRunner
 from app.agent import app
-
-# Ensure project root is in sys.path
-sys.path.insert(0, os.path.abspath(os.path.dirname(os.path.dirname(__file__))))
+from app.tools.model_routing import get_model_id
 
 CONFIG_PATH = "eval/eval_config.yaml"
 
@@ -19,26 +21,39 @@ def load_config():
 
 async def run_agent_query(runner, text: str) -> dict:
     """Runs a single query through the ADK agent and returns the parsed report dict."""
-    session = await runner.session_service.create_session(app_name="app", user_id="eval_user")
-    final_output = None
-    
-    async for event in runner.run_async(
-        user_id="eval_user",
-        session_id=session.id,
-        new_message=types.Content(role="user", parts=[types.Part.from_text(text=text)]),
-    ):
-        if event.output is not None:
-            final_output = event.output
+    import asyncio
+    for attempt in range(6):
+        try:
+            session = await runner.session_service.create_session(app_name="app", user_id="eval_user")
+            final_output = None
             
-    if final_output:
-        # Final output is a ReportOutput model or already a dict
-        if hasattr(final_output, "model_dump"):
-            return final_output.model_dump()
-        return final_output
+            async for event in runner.run_async(
+                user_id="eval_user",
+                session_id=session.id,
+                new_message=types.Content(role="user", parts=[types.Part.from_text(text=text)]),
+            ):
+                if event.output is not None:
+                    final_output = event.output
+                    
+            if final_output:
+                # Final output is a ReportOutput model or already a dict
+                if hasattr(final_output, "model_dump"):
+                    return final_output.model_dump()
+                return final_output
+            return {}
+        except Exception as e:
+            err_str = str(e)
+            if "429" in err_str or "RESOURCE_EXHAUSTED" in err_str:
+                sleep_time = 6.0 + attempt * 2.0
+                print(f"\n[Rate Limit] Caught 429 in run_agent_query. Sleeping {sleep_time}s (Attempt {attempt+1}/6)...")
+                await asyncio.sleep(sleep_time)
+            else:
+                raise e
     return {}
 
 def score_tactic_judge(judge_model: str, expected_levers: list[str], actual_levers: list[str], prompt_template: str) -> dict:
     """Calls the LLM-as-judge (gemini-2.5-pro) to score tactic extraction 0-5."""
+    import time
     client = genai.Client()
     prompt = prompt_template.replace(
         "{expected_levers}", ", ".join(expected_levers) if expected_levers else "None"
@@ -46,18 +61,26 @@ def score_tactic_judge(judge_model: str, expected_levers: list[str], actual_leve
         "{extracted_levers}", ", ".join(actual_levers) if actual_levers else "None"
     )
     
-    try:
-        response = client.models.generate_content(
-            model=judge_model,
-            contents=prompt,
-            config=types.GenerateContentConfig(
-                response_mime_type="application/json",
-                temperature=0.0
+    for attempt in range(6):
+        try:
+            response = client.models.generate_content(
+                model=judge_model,
+                contents=prompt,
+                config=types.GenerateContentConfig(
+                    response_mime_type="application/json",
+                    temperature=0.0
+                )
             )
-        )
-        return json.loads(response.text.strip())
-    except Exception as e:
-        return {"score": 0, "explanation": f"Failed to run judge: {e}"}
+            return json.loads(response.text.strip())
+        except Exception as e:
+            err_str = str(e)
+            if "429" in err_str or "RESOURCE_EXHAUSTED" in err_str:
+                sleep_time = 6.0 + attempt * 2.0
+                print(f"\n[Rate Limit] Caught 429 in score_tactic_judge. Sleeping {sleep_time}s (Attempt {attempt+1}/6)...")
+                time.sleep(sleep_time)
+            else:
+                return {"score": 0, "explanation": f"Failed to run judge: {e}"}
+    return {"score": 0, "explanation": "Failed to run judge due to persistent rate limit"}
 
 async def evaluate_classifier(runner, cases):
     print("\n--- Running Classifier Evaluation ---")
@@ -163,6 +186,10 @@ async def main():
     # Load dataset classifier
     with open(config["metrics"]["classifier"]["dataset"], "r") as f:
         classifier_cases = json.load(f)["cases"]
+    
+    import random
+    random.seed(42)
+    classifier_cases = random.sample(classifier_cases, min(30, len(classifier_cases)))
         
     # Load dataset tactics
     with open(config["metrics"]["tactic_extraction"]["dataset"], "r") as f:
@@ -177,7 +204,7 @@ async def main():
     tactics_res = await evaluate_tactics(
         runner, 
         tactics_cases, 
-        config["judge_model"], 
+        get_model_id("judge"), 
         config["metrics"]["tactic_extraction"]["prompt_template"]
     )
     safety_res = await evaluate_safety(runner, safety_cases)

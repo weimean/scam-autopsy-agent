@@ -4,6 +4,8 @@ from google.genai import types
 from google.adk.agents.context import Context
 from app.schemas import ClassifierOutput
 from app.tools.pii_masker import mask_pii
+from app.tools.model_routing import get_model_id
+from app.guardrails.policy import validate_input_intent
 
 async def intake_classifier(ctx: Context, node_input: str) -> ClassifierOutput:
     """
@@ -15,6 +17,19 @@ async def intake_classifier(ctx: Context, node_input: str) -> ClassifierOutput:
     # 1. Mask PII immediately to protect user privacy
     masked = mask_pii(node_input)
     
+    # 1.5 Check intent safety (prevent offensive use or safety bypass requests)
+    if not validate_input_intent(node_input):
+        ctx.state["blocked"] = True
+        result = ClassifierOutput(
+            is_scam=True,
+            confidence=1.0,
+            category="unknown",
+            red_flag_hints=["Safety Policy Violation"],
+            masked_text=masked
+        )
+        ctx.state["classifier_output"] = result
+        return result
+        
     # 2. Query gemini-3.1-flash-lite for structured classification
     client = genai.Client()
     prompt = (
@@ -28,7 +43,7 @@ async def intake_classifier(ctx: Context, node_input: str) -> ClassifierOutput:
     )
     
     response = client.models.generate_content(
-        model="gemini-3.1-flash-lite",
+        model=get_model_id("flash-lite"),
         contents=prompt,
         config=types.GenerateContentConfig(
             response_mime_type="application/json",

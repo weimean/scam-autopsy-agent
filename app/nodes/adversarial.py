@@ -27,6 +27,8 @@ async def adversarial_core(ctx: Context, node_input: ClassifierOutput) -> Advers
     ctx.state["loop_turns_run"] = 0
     
     try:
+        if ctx.state.get("blocked"):
+            return AdversarialTranscript(turns=[])
         current_input = node_input.masked_text
         
         for turn_idx in range(max_turns):

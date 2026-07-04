@@ -1,6 +1,7 @@
 import sqlite3
 from google import genai
 from google.genai import types
+from app.tools.model_routing import get_model_id
 
 def get_known_tactics(category: str) -> list[dict]:
     """Queries the local sqlite KB to retrieve known tactics for a category."""
@@ -43,7 +44,7 @@ def query_guardian(category: str, scammer_turn: str, history: list[dict]) -> str
     )
     
     response = client.models.generate_content(
-        model="gemini-3.1-flash-lite",
+        model=get_model_id("flash-lite"),
         contents=prompt,
         config=types.GenerateContentConfig(
             temperature=0.2,

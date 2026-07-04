@@ -1,5 +1,6 @@
 from google import genai
 from google.genai import types
+from app.tools.model_routing import get_model_id
 
 def query_scammer(message: str, history: list[dict]) -> str:
     """
@@ -27,7 +28,7 @@ def query_scammer(message: str, history: list[dict]) -> str:
     )
     
     response = client.models.generate_content(
-        model="gemini-3.1-flash-lite",
+        model=get_model_id("flash-lite"),
         contents=prompt,
         config=types.GenerateContentConfig(
             temperature=0.7,

@@ -4,14 +4,23 @@ from google import genai
 from google.genai import types
 from google.adk.agents.context import Context
 from app.schemas import AdversarialTranscript, TacticInfo, ClassifierOutput
+from app.tools.model_routing import get_model_id
+
+from typing import Literal
 
 class ExtractedTactic(BaseModel):
     name: str = Field(..., description="Snake_case name of the tactic")
-    lever: str = Field(..., description="The persuasion lever used")
+    lever: Literal[
+        "authority", "urgency", "scarcity", "social_proof", "reciprocity",
+        "liking", "commitment", "fear", "unrealistic_returns", "trust_building", "isolation"
+    ] = Field(..., description="The persuasion lever used")
     description: str = Field(..., description="Detailed description")
     explanation: str = Field(..., description="Plain-language explanation for a non-expert")
     example_masked: str = Field(..., description="PII-masked example of the tactic")
-    category: str = Field(..., description="Fraud category")
+    category: Literal[
+        "crypto_investment", "romance", "phishing", "prize_lottery",
+        "tech_support", "advance_fee", "impersonation_bec", "unknown"
+    ] = Field(..., description="Fraud category")
 
 class ExtractedTacticsWrapper(BaseModel):
     tactics: list[ExtractedTactic]
@@ -76,7 +85,7 @@ async def tactic_extractor(ctx: Context, node_input: AdversarialTranscript) -> l
     
     client = genai.Client()
     response = client.models.generate_content(
-        model="gemini-3.1-pro",
+        model=get_model_id("pro"),
         contents=prompt,
         config=types.GenerateContentConfig(
             response_mime_type="application/json",

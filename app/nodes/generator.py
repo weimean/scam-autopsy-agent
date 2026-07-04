@@ -6,6 +6,7 @@ from google.genai import types
 from google.adk.agents.context import Context
 from app.schemas import ClassifierOutput, TacticInfo, ReportOutput, VerdictInfo, ReportingLink
 from app.guardrails.policy import validate_report_output
+from app.tools.model_routing import get_model_id
 
 class SynthesizedReport(BaseModel):
     warning: str = Field(..., description="1-2 sentence warning about this specific scam")
@@ -60,6 +61,25 @@ async def report_generator(
     total_catalogued = get_stats_total()
     kb_stat = f"tactics catalogued: {total_catalogued}"
 
+    # 2.5 If safety blocked, return security warning immediately
+    if ctx.state.get("blocked"):
+        return validate_report_output(ReportOutput(
+            verdict=VerdictInfo(
+                is_scam=True,
+                confidence=1.0,
+                category="unknown"
+            ),
+            tactics=[],
+            warning="[CONTENT BLOCKED by Policy Server - Reframed to defensive analysis of the scam pattern to prevent offensive generation]",
+            how_to_protect=[
+                "Do not interact with or attempt to generate malicious content.",
+                "Report potential online abuse or security issues to appropriate authorities."
+            ],
+            reporting_links=[],
+            disclaimer="educational, not legal/financial advice",
+            kb_stat=kb_stat
+        ))
+
     # 3. Handle benign messages (ham) without calling LLM (token optimization)
     if not classifier_output.is_scam:
         return validate_report_output(ReportOutput(
@@ -97,7 +117,7 @@ async def report_generator(
     )
     
     response = client.models.generate_content(
-        model="gemini-3.1-pro",
+        model=get_model_id("pro"),
         contents=prompt,
         config=types.GenerateContentConfig(
             response_mime_type="application/json",
