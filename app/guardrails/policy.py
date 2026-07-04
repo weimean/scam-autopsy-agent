@@ -43,6 +43,7 @@ def validate_text_semantic(text: str, is_warning: bool = False) -> bool:
     Performs the semantic layer check using the mapped LLM.
     Returns True if OK, False if VIOLATION.
     """
+    import time
     if not text:
         return True
         
@@ -70,20 +71,27 @@ def validate_text_semantic(text: str, is_warning: bool = False) -> bool:
         "Response (strictly either VIOLATION or OK):"
     )
     
-    try:
-        response = client.models.generate_content(
-            model=get_model_id("pro"),
-            contents=prompt,
-            config=types.GenerateContentConfig(temperature=0.0)
-        )
-        verdict = response.text.strip().upper()
-        if "VIOLATION" in verdict:
-            return False
-    except Exception:
-        # Fail-closed for safety
-        return False
-        
-    return True
+    for attempt in range(3):
+        try:
+            response = client.models.generate_content(
+                model=get_model_id("pro"),
+                contents=prompt,
+                config=types.GenerateContentConfig(temperature=0.0)
+            )
+            verdict = response.text.strip().upper()
+            if "VIOLATION" in verdict:
+                return False
+            return True
+        except Exception as e:
+            err_str = str(e)
+            if "429" in err_str or "RESOURCE_EXHAUSTED" in err_str or "503" in err_str or "UNAVAILABLE" in err_str:
+                sleep_time = 2.0 + attempt * 2.0
+                time.sleep(sleep_time)
+            else:
+                return False
+                
+    # If quota persists, fail-open for internal warnings, fail-closed for raw inputs
+    return is_warning
 
 def validate_scammer_output(text: str) -> str:
     """

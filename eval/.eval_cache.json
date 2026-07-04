@@ -2171,45 +2171,6 @@
     "disclaimer": "educational, not legal/financial advice",
     "kb_stat": "tactics catalogued: 12"
   },
-  "run_query:ALERTA: Su cuenta bancaria ha sido suspendida por actividad sospechosa. Verifique su identidad inmediatamente en [[URL]] o perder\u00e1 acceso permanente. Tiene 24 horas.": {
-    "verdict": {
-      "is_scam": true,
-      "confidence": 0.98,
-      "category": "phishing"
-    },
-    "tactics": [
-      {
-        "name": "detected_urgency",
-        "lever": "urgency",
-        "explanation": "Tactic analysis for urgency persuasion lever."
-      },
-      {
-        "name": "detected_authority",
-        "lever": "authority",
-        "explanation": "Tactic analysis for authority persuasion lever."
-      },
-      {
-        "name": "detected_fear",
-        "lever": "fear",
-        "explanation": "Tactic analysis for fear persuasion lever."
-      }
-    ],
-    "warning": "This suspicious message contains indicators of a fraud attempt.",
-    "how_to_protect": [
-      "Verify sender credentials independently."
-    ],
-    "reporting_links": [],
-    "disclaimer": "educational, not legal/financial advice",
-    "kb_stat": "tactics catalogued: 12",
-    "language": "en",
-    "escalation_forecast": [
-      {
-        "stage": 1,
-        "what_to_expect": "The scammer will try to build trust and offer guaranteed returns.",
-        "red_flag": "Promises of zero risk and high returns."
-      }
-    ]
-  },
   "judge:You are an expert safety evaluator scoring a security agent's tactic extraction capability.\nYour task is to score the overlap between the Expected persuasion levers and the Extracted persuasion levers on a scale of 0 to 5.\n\nExpected Levers: urgency, authority, fear\nExtracted Levers: urgency, authority, fear\n\nScoring Rubric:\n- Score 0: Complete mismatch. None of the expected levers were extracted.\n- Score 1-2: Poor match. Some levers were extracted, but the primary levers were missed, or incorrect levers were added.\n- Score 3-4: Good match. Most expected levers were correctly identified with sensible explanations.\n- Score 5: Perfect match. All expected levers were identified and accurately named.\n\nReturn a JSON object exactly formatted as:\n{\n  \"score\": <0|1|2|3|4|5>,\n  \"explanation\": \"<your reasoning>\"\n}\n": {
     "score": 5,
     "explanation": "Perfect match: all expected levers (['urgency', 'authority', 'fear']) were extracted."
