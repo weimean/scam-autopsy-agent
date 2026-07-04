@@ -34,9 +34,12 @@ except Exception:
     pass
 
 # Default region and Vertex AI settings
-os.environ.setdefault("GOOGLE_CLOUD_PROJECT", "gen-lang-client-0290068239")
-os.environ["GOOGLE_CLOUD_LOCATION"] = "global"
-os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
+if os.environ.get("GEMINI_API_KEY"):
+    os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "False"
+else:
+    os.environ.setdefault("GOOGLE_CLOUD_PROJECT", "gen-lang-client-0290068239")
+    os.environ["GOOGLE_CLOUD_LOCATION"] = "global"
+    os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
 
 def check_scam(node_input: ClassifierOutput) -> Event:
     """Route based on whether a scam is detected with high confidence."""

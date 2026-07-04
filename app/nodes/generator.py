@@ -1,23 +1,51 @@
-from google.adk.agents.context import Context
-from app.schemas import ClassifierOutput, TacticInfo, ReportOutput, VerdictInfo
+import sqlite3
 from typing import Union
+from pydantic import BaseModel, Field
+from google import genai
+from google.genai import types
+from google.adk.agents.context import Context
+from app.schemas import ClassifierOutput, TacticInfo, ReportOutput, VerdictInfo, ReportingLink
+
+class SynthesizedReport(BaseModel):
+    warning: str = Field(..., description="1-2 sentence warning about this specific scam")
+    how_to_protect: list[str] = Field(..., description="List of concrete steps to take")
+    reporting_links: list[ReportingLink] = Field(..., description="Official reporting channels")
+
+def get_stats_total() -> int:
+    """Queries the SQLite tactics table to get the total number of catalogued tactics."""
+    try:
+        conn = sqlite3.connect("data/scam_intel.db")
+        cursor = conn.cursor()
+        cursor.execute("SELECT COUNT(*) FROM tactics")
+        total = cursor.fetchone()[0]
+        return total
+    except Exception:
+        return 0
+    finally:
+        try:
+            conn.close()
+        except Exception:
+            pass
 
 async def report_generator(
     ctx: Context, 
     node_input: Union[list[TacticInfo], ClassifierOutput], 
     classifier_output: ClassifierOutput = None
 ) -> ReportOutput:
-    """Assembles the final structured threat intelligence report."""
-    # Determine the context inputs based on the predecessor route path
+    """
+    WHY: Assembles the final threat intelligence report following specs/03_schemas.md.
+    For scam messages, it queries gemini-3.1-pro to synthesize context-aware, plain-language
+    advisories, how-to-protect tips, and official links. Benign messages bypass the LLM synthesis
+    to save tokens. Integrates SQLite row count dynamically for the 'kb_stat' UI element.
+    """
+    # 1. Parse branching logic inputs
     if isinstance(node_input, list):
         tactics = node_input
-        # classifier_output is bound from state automatically by ADK
     else:
-        # Came directly from check_scam on the no_scam route
         tactics = []
         classifier_output = node_input
 
-    # Safety default in case binding/state lookup failed
+    # Fallback defaults if binding/state was empty
     if classifier_output is None:
         classifier_output = ClassifierOutput(
             is_scam=False,
@@ -27,17 +55,68 @@ async def report_generator(
             masked_text=""
         )
 
-    # TODO: Synthesize final warning, protection steps, and official links
+    # 2. Get database statistics for collective-intelligence counter
+    total_catalogued = get_stats_total()
+    kb_stat = f"tactics catalogued: {total_catalogued}"
+
+    # 3. Handle benign messages (ham) without calling LLM (token optimization)
+    if not classifier_output.is_scam:
+        return ReportOutput(
+            verdict=VerdictInfo(
+                is_scam=False,
+                confidence=classifier_output.confidence,
+                category=classifier_output.category
+            ),
+            tactics=[],
+            warning="This message does not appear to be a scam. No safety threats identified.",
+            how_to_protect=[
+                "Keep personal details secure.",
+                "Avoid clicking on links sent from unsolicited numbers or emails."
+            ],
+            reporting_links=[
+                ReportingLink(label="FTC Consumer Advice", url="https://consumer.ftc.gov")
+            ],
+            disclaimer="educational, not legal/financial advice",
+            kb_stat=kb_stat
+        )
+
+    # 4. Synthesize scam warning/guidance using gemini-3.1-pro
+    client = genai.Client()
+    tactics_summary = ", ".join([f"{t.name} (lever: {t.lever})" for t in tactics])
+    
+    prompt = (
+        f"You are a consumer protection threat analyst writing an educational safety advisory.\n"
+        f"Analyze this scam category '{classifier_output.category}' with text:\n"
+        f"'{classifier_output.masked_text}'\n\n"
+        f"Identified persuasion tactics: {tactics_summary}\n\n"
+        f"Synthesize the following fields precisely:\n"
+        f"1. warning: 1-2 sentence plain-language warning summarizing the core threat.\n"
+        f"2. how_to_protect: list of concrete, actionable safety steps the user should take immediately.\n"
+        f"3. reporting_links: list of official channels to report this category of scam (e.g. FTC at https://reportfraud.ftc.gov, IC3 at https://www.ic3.gov, etc. with label and url fields).\n"
+    )
+    
+    response = client.models.generate_content(
+        model="gemini-3.1-pro",
+        contents=prompt,
+        config=types.GenerateContentConfig(
+            response_mime_type="application/json",
+            response_schema=SynthesizedReport,
+            temperature=0.0
+        )
+    )
+    
+    synthesized = SynthesizedReport.model_validate_json(response.text.strip())
+    
     return ReportOutput(
         verdict=VerdictInfo(
-            is_scam=classifier_output.is_scam,
+            is_scam=True,
             confidence=classifier_output.confidence,
             category=classifier_output.category
         ),
         tactics=tactics,
-        warning="",
-        how_to_protect=[],
-        reporting_links=[],
+        warning=synthesized.warning,
+        how_to_protect=synthesized.how_to_protect,
+        reporting_links=synthesized.reporting_links,
         disclaimer="educational, not legal/financial advice",
-        kb_stat="tactics catalogued: 0"
+        kb_stat=kb_stat
     )
