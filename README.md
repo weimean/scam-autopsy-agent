@@ -66,6 +66,17 @@ You can also use features from the [ADK](https://adk.dev/) CLI with `uv run adk`
 | `agents-cli infra cicd` | One-command setup of entire CI/CD pipeline + infrastructure |
 | `agents-cli scaffold upgrade` | Auto-upgrade to latest version while preserving customizations |
 
+## 🌍 Multi-language Analysis
+
+Scam Autopsy detects the input language automatically and responds in kind:
+
+- **Intake** detects the message language (ISO 639-1 code, e.g. `es`, `fr`, `tl`)
+- **Analysis runs in the original language** — Gemini is natively multilingual; no forced translation
+- **Taxonomy is language-agnostic** — lever names (`urgency`, `authority`) stay as English identifiers
+- **Reports are written in the detected language** — a Spanish-speaking victim gets guidance in Spanish
+
+Tested with eval cases in English, Spanish, French, and Tagalog.
+
 ---
 
 ## Development
