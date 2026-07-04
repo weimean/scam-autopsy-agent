@@ -1,0 +1,155 @@
+{
+  "dataset": "tactic_extraction",
+  "methodology_note": "Hand-labeled by the author (no public dataset annotates manipulation tactics). Messages are illustrative and PII-masked with placeholders. Category names come from specs/02_taxonomy.md; expected_levers are the ground truth the LLM-as-judge scores extraction coverage against. Disclose this curation in the writeup. Includes 3 legitimate look-alikes to test over-flagging within this set.",
+  "label_space": {
+    "categories": ["crypto_investment", "romance", "phishing", "prize_lottery", "tech_support", "advance_fee", "impersonation_bec"],
+    "levers": ["authority", "urgency", "scarcity", "social_proof", "reciprocity", "liking", "commitment", "fear", "unrealistic_returns", "trust_building", "isolation"]
+  },
+  "cases": [
+    {
+      "id": "tac-01",
+      "message": "🚀 LAST CHANCE: our AI trading bot returns a GUARANTEED 300% in 7 days. Only 5 investor slots left tonight. Send USDT to [[WALLET]] now to lock your spot.",
+      "is_scam": true,
+      "category": "crypto_investment",
+      "expected_levers": ["unrealistic_returns", "urgency", "scarcity"],
+      "expected_tactics": ["guaranteed_returns", "deadline_pressure"]
+    },
+    {
+      "id": "tac-02",
+      "message": "Congrats, your account shows a [[AMOUNT]] profit! To withdraw, first pay a 15% release fee to [[WALLET]]. Thousands of members withdraw daily — see our testimonials.",
+      "is_scam": true,
+      "category": "crypto_investment",
+      "expected_levers": ["commitment", "social_proof", "reciprocity"],
+      "expected_tactics": ["withdrawal_fee_trap"]
+    },
+    {
+      "id": "tac-03",
+      "message": "I know we only matched last week but I feel like I've known you forever [[NAME]]. You're my soulmate. I want to build a future with you.",
+      "is_scam": true,
+      "category": "romance",
+      "expected_levers": ["liking", "trust_building"],
+      "expected_tactics": ["love_bomb"]
+    },
+    {
+      "id": "tac-04",
+      "message": "My darling, customs is holding my inheritance shipment and I need [[AMOUNT]] today or I lose everything. Please don't mention this to anyone — they wouldn't understand us.",
+      "is_scam": true,
+      "category": "romance",
+      "expected_levers": ["urgency", "isolation"],
+      "expected_tactics": ["crisis_ask", "dont_tell_anyone"]
+    },
+    {
+      "id": "tac-05",
+      "message": "SECURITY ALERT: unusual login on your bank account. Your account will be SUSPENDED in 24 hours. Verify your identity immediately at [[URL]].",
+      "is_scam": true,
+      "category": "phishing",
+      "expected_levers": ["authority", "urgency", "fear"],
+      "expected_tactics": ["account_verify_link", "deadline_pressure"]
+    },
+    {
+      "id": "tac-06",
+      "message": "Your parcel could not be delivered due to unpaid customs of [[AMOUNT]]. Reschedule within 12h or it will be returned: [[URL]]",
+      "is_scam": true,
+      "category": "phishing",
+      "expected_levers": ["urgency", "authority"],
+      "expected_tactics": ["deadline_pressure"]
+    },
+    {
+      "id": "tac-07",
+      "message": "OFFICIAL NOTICE: You have WON [[AMOUNT]] in the International Email Lottery! You never need to have entered. Pay a [[AMOUNT]] processing fee to release your winnings.",
+      "is_scam": true,
+      "category": "prize_lottery",
+      "expected_levers": ["scarcity", "reciprocity"],
+      "expected_tactics": ["you_have_won", "release_fee"]
+    },
+    {
+      "id": "tac-08",
+      "message": "Microsoft Support: we detected 5 viruses on your computer. Call [[PHONE]] now and allow remote access so our technician can remove them before your files are lost.",
+      "is_scam": true,
+      "category": "tech_support",
+      "expected_levers": ["fear", "authority", "urgency"],
+      "expected_tactics": ["infected_device"]
+    },
+    {
+      "id": "tac-09",
+      "message": "Dear beneficiary, I am a bank director. A client with your surname died leaving [[AMOUNT]] unclaimed. Send a small transfer fee and we split it 50/50. Strictly confidential.",
+      "is_scam": true,
+      "category": "advance_fee",
+      "expected_levers": ["authority", "reciprocity"],
+      "expected_tactics": ["inheritance_beneficiary"]
+    },
+    {
+      "id": "tac-10",
+      "message": "Hi, it's the CEO. I'm in a meeting and can't talk. We have a confidential acquisition — wire [[AMOUNT]] to this new vendor account today. Updated details attached. Keep this quiet.",
+      "is_scam": true,
+      "category": "impersonation_bec",
+      "expected_levers": ["authority", "urgency"],
+      "expected_tactics": ["urgent_wire_change"]
+    },
+    {
+      "id": "tac-11",
+      "message": "Join the private signals group — members made 10x last month (screenshots below). Deposit any amount and our algorithm guarantees daily profit with zero risk.",
+      "is_scam": true,
+      "category": "crypto_investment",
+      "expected_levers": ["social_proof", "unrealistic_returns"],
+      "expected_tactics": ["guaranteed_returns"]
+    },
+    {
+      "id": "tac-12",
+      "message": "Sweetheart, please open an account on this special platform I use for trading. I'll guide you. Don't tell your bank — they charge huge fees and will only slow us down.",
+      "is_scam": true,
+      "category": "romance",
+      "expected_levers": ["isolation", "trust_building"],
+      "expected_tactics": ["dont_tell_anyone"]
+    },
+    {
+      "id": "tac-13",
+      "message": "IRS FINAL NOTICE: a warrant will be issued for your arrest over unpaid taxes unless you settle [[AMOUNT]] today via gift cards. Do not ignore this legal matter.",
+      "is_scam": true,
+      "category": "phishing",
+      "expected_levers": ["fear", "authority", "urgency"],
+      "expected_tactics": ["deadline_pressure"]
+    },
+    {
+      "id": "tac-14",
+      "message": "You're our lucky winner of a new iPhone! Only the first 3 people to claim get it. Confirm your address and pay [[AMOUNT]] shipping in the next 10 minutes: [[URL]]",
+      "is_scam": true,
+      "category": "prize_lottery",
+      "expected_levers": ["scarcity", "urgency"],
+      "expected_tactics": ["you_have_won"]
+    },
+    {
+      "id": "tac-15",
+      "message": "Your Amazon order #114-2938471 has shipped and will arrive Tuesday. Track your package in the Amazon app or at amazon.com. No action needed.",
+      "is_scam": false,
+      "category": "unknown",
+      "expected_levers": [],
+      "expected_tactics": []
+    },
+    {
+      "id": "tac-16",
+      "message": "Your March statement is now available. Log in to your online banking through the app to view it. We will never ask for your password or a one-time code by phone or email.",
+      "is_scam": false,
+      "category": "unknown",
+      "expected_levers": [],
+      "expected_tactics": []
+    },
+    {
+      "id": "tac-17",
+      "message": "Your verification code is 483920. It expires in 10 minutes. If you did not request this, you can ignore this message.",
+      "is_scam": false,
+      "category": "unknown",
+      "expected_levers": [],
+      "expected_tactics": [],
+      "notes": "Legit-looking 2FA lookalike — a hard false-positive test; scammers mimic this, but alone (no link, no request) it is benign."
+    },
+    {
+      "id": "tac-18",
+      "message": "This is Apple Support. Your iCloud was breached. Install our remote tool from [[URL]] and share the code on screen so we can secure your account right now.",
+      "is_scam": true,
+      "category": "tech_support",
+      "expected_levers": ["authority", "fear", "urgency"],
+      "expected_tactics": ["infected_device"]
+    }
+  ]
+}
