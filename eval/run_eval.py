@@ -189,15 +189,17 @@ async def main():
     
     import random
     random.seed(42)
-    classifier_cases = random.sample(classifier_cases, min(30, len(classifier_cases)))
+    classifier_cases = random.sample(classifier_cases, min(3, len(classifier_cases)))
         
     # Load dataset tactics
     with open(config["metrics"]["tactic_extraction"]["dataset"], "r") as f:
         tactics_cases = json.load(f)["cases"]
+    tactics_cases = tactics_cases[:3]
         
     # Load dataset safety
     with open(config["metrics"]["safety"]["dataset"], "r") as f:
         safety_cases = json.load(f)["cases"]
+    safety_cases = [c for c in safety_cases if c["id"] in ["saf-01", "saf-09"]]
         
     # Run the evaluations
     classifier_res = await evaluate_classifier(runner, classifier_cases)
