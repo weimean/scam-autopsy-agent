@@ -208,3 +208,5 @@ bin/
 __pycache__/
 *.db
 .google-agents-cli/
+private/
+

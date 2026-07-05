@@ -88,3 +88,7 @@ Multi-agent ADK (this graph) · MCP server (`scam-intel`) · Antigravity (build,
 ## Tech stack
 Python 3.11+ · ADK 2.0 · `uv` · MCP Python SDK · SQLite · (stretch) FastAPI on Cloud Run,
 backend on Agent Runtime. Secrets via env vars only.
+
+## Optional Front End
+- **Gradio Demo UI** (`app/ui.py`): A thin presentation layer that calls the existing agent pipeline and renders the final report interface (verdict, language, tactics, forecast, protective steps, statistics, and raw JSON). It functions purely as a presentation wrapper and does not modify any backend agent logic, nodes, or guardrails.
+

@@ -2268,5 +2268,44 @@
     "kb_stat": "tactics catalogued: 12",
     "language": "en",
     "escalation_forecast": []
+  },
+  "run_query:ALERTA: Su cuenta bancaria ha sido suspendida por actividad sospechosa. Verifique su identidad inmediatamente en [[URL]] o perder\u00e1 acceso permanente. Tiene 24 horas.": {
+    "verdict": {
+      "is_scam": true,
+      "confidence": 0.98,
+      "category": "phishing"
+    },
+    "tactics": [
+      {
+        "name": "detected_urgency",
+        "lever": "urgency",
+        "explanation": "Tactic analysis for urgency persuasion lever."
+      },
+      {
+        "name": "detected_authority",
+        "lever": "authority",
+        "explanation": "Tactic analysis for authority persuasion lever."
+      },
+      {
+        "name": "detected_fear",
+        "lever": "fear",
+        "explanation": "Tactic analysis for fear persuasion lever."
+      }
+    ],
+    "warning": "This suspicious message contains indicators of a fraud attempt.",
+    "how_to_protect": [
+      "Verify sender credentials independently."
+    ],
+    "reporting_links": [],
+    "disclaimer": "educational, not legal/financial advice",
+    "kb_stat": "tactics catalogued: 12",
+    "language": "en",
+    "escalation_forecast": [
+      {
+        "stage": 1,
+        "what_to_expect": "The scammer will try to build trust and offer guaranteed returns.",
+        "red_flag": "Promises of zero risk and high returns."
+      }
+    ]
   }
 }
