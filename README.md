@@ -147,4 +147,10 @@ scam-autopsy/
 
 ---
 
+## License
+
+© 2026 Tsoi Wai Mun — *Scam Autopsy*. Licensed under [CC BY 4.0](LICENSE). Reuse and adapt it freely; just keep the attribution. The classifier evaluation set includes messages drawn from the public [UCI SMS Spam Collection](https://archive.ics.uci.edu/dataset/228/sms+spam+collection) (Almeida & Gómez Hidalgo, freely available for research — please cite it if you reuse the data); the tactic and safety sets are hand-labeled by the author. The CC BY 4.0 license covers my own work, not the underlying public corpora.
+
+---
+
 *Built with Google Antigravity, ADK 2.0, Agents CLI, and the Model Context Protocol. It's an educational tool, not legal or financial advice.*
