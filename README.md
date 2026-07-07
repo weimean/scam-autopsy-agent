@@ -80,6 +80,18 @@ This is the part I'm most proud of, because a green scorecard is easy to fake yo
 - **I caught myself gaming my own eval.** An early scorecard read "100%" because it was quietly running on 3 cases. I noticed, expanded it to the full set, and the real F1 is the 94.34% above.
 - **I caught the safety layer over-blocking.** The escalation forecaster started censoring its own *warnings to the victim* as if they were scam scripts. I retuned the semantic gate to tell a warning apart from a script, then re-ran the safety suite to confirm the real attacks still get blocked.
 
+## Hardening it: the bug my fail-safe was hiding
+
+The scorecard above is honest about *what it measured* — but going back to harden the system taught me something the numbers couldn't.
+
+I built the graph to degrade gracefully: if the adversarial loop errors or runs long, it skips to the Report Generator on the classifier's hints, so a verdict always ships. That fail-safe worked a little too well. When I finally instrumented the Scammer⇄Guardian loop, I found it had been **crashing on the second turn of every run** — I was appending `AdversarialTurn` objects to the history, but the agents expected plain dicts and called `.get()` on them. The loop died, the fail-safe swallowed it, the report still looked right, and the eval — which grades the *final output* — never noticed. My own graceful degradation was hiding a dead loop.
+
+Fixing the crash surfaced a more interesting problem: even with the loop running, every Scammer turn came back blocked — and it *should* have. I'd told the red-team to **generate** the scam pitch, which is exactly the deployable-scam text my own Policy Server exists to refuse. The two halves of the design were fighting each other. The fix was conceptual, not mechanical: a defensive red-team shouldn't *write* scams, it should **expose the next manipulation move and name the lever** — analysis that surfaces the tactic without ever producing something sendable. That clears the safety gate and gives the Guardian something real to name. (One last wrinkle: the Guardian kept coming back empty on the smaller model until I trimmed the piled-up scam history out of its prompt — the stack of tactic descriptions was tripping the model's own safety filter.)
+
+The loop runs end to end now: six turns, both agents populated, the manipulation playbook surfaced move by move — fear, authority, reciprocity, scarcity, trust-building — and those tactics flow into the report instead of coming from a fallback.
+
+**One caveat, stated plainly:** the scorecard above was measured *before* these fixes, while the loop was quietly degrading — so those numbers lean on the fallback path more than the adversarial one. They should hold or improve now that the loop actually works, but I'd re-run the suite before leaning on them in anger.
+
 ## Safety design
 
 The system holds a red-team agent that talks like a scammer, so I treated safety as part of the build, not a wrapper on top of it.
