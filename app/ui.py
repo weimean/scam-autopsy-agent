@@ -53,12 +53,14 @@ async def analyze_message(message: str, api_key: str):
     verdict_str = f"🛑 SCAM (Confidence: {conf*100:.1f}%)" if is_scam else f"✅ NOT A SCAM (Confidence: {conf*100:.1f}%)"
     badge_color = "#ea4335" if is_scam else "#34a853"
     
-    report_html = f"""
-    <div style="border: 2px solid {badge_color}; border-radius: 8px; padding: 15px; margin-bottom: 20px; background-color: {badge_color}10;">
-        <h2 style="margin: 0; color: {badge_color};">{verdict_str}</h2>
-        <p style="margin: 5px 0 0 0;"><b>Category:</b> {category.upper()} | <b>Language:</b> {data.get('language', 'en').upper()}</p>
-    </div>
-    """
+    # Single-line HTML (no leading indentation) so gr.Markdown renders it as a
+    # styled banner instead of treating the indented block as a code block.
+    report_html = (
+        f'<div style="border: 2px solid {badge_color}; border-radius: 8px; padding: 15px; margin-bottom: 20px; background-color: {badge_color}10;">'
+        f'<h2 style="margin: 0; color: {badge_color};">{verdict_str}</h2>'
+        f'<p style="margin: 5px 0 0 0;"><b>Category:</b> {category.upper()} | <b>Language:</b> {data.get("language", "en").upper()}</p>'
+        f'</div>'
+    )
     
     tactics_md = "### Detected Tactics\n| Name | Lever | Explanation |\n|---|---|---|\n"
     for t in data.get("tactics", []):
@@ -76,7 +78,9 @@ async def analyze_message(message: str, api_key: str):
     links_md = "### Official Reporting Channels\n" + "\n".join([f"- [{link.get('label')}]({link.get('url')})" for link in data.get("reporting_links", [])])
     
     report_md = f"""{report_html}
+
 ### Warning
+
 > ⚠️ {data.get('warning', '')}
 
 {tactics_md}
