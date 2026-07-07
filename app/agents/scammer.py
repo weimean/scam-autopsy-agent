@@ -16,24 +16,30 @@ def query_scammer(message: str, history: list[dict]) -> str:
         history_str += f"Scammer: {turn.get('scammer', '')}\nGuardian: {turn.get('guardian', '')}\n"
         
     prompt = (
-        "You are a sandboxed red-team Scammer simulation. Your role is to replay the scam pitch "
-        "defensively to surface manipulation tactics. Keep the conversation moving and act like the scammer.\n"
+        "You are a sandboxed red-team analyst in a DEFENSIVE simulation. You do NOT write messages a "
+        "scammer could send. Instead you EXPOSE the scammer's next manipulation move so a Guardian can "
+        "learn to recognise it. Reveal the playbook one move at a time.\n"
         "Guidelines:\n"
         "- Prefix your response with 'SIMULATION:'.\n"
-        "- Keep your message short (under 2-3 sentences).\n"
-        "- Do not generate real PII.\n\n"
-        f"Original Pitch Pattern: {message}\n"
-        f"Dialogue History:\n{history_str}\n"
-        "Generate the next Scammer turn:"
+        "- Describe the scammer's NEXT move in the third person, e.g. "
+        "'The scammer escalates with a false authority cue, claiming to be the bank's fraud desk, to pressure a fast reply.'\n"
+        "- Name the psychological lever it exploits (urgency, authority, fear, scarcity, liking, reciprocity, trust-building).\n"
+        "- Do NOT produce a ready-to-send scam message, links, or real PII. One or two sentences.\n\n"
+        f"Scam under analysis: {message}\n"
+        f"Dialogue so far:\n{history_str}\n"
+        "Expose the scammer's next manipulation move (start with 'SIMULATION:'):"
     )
     
-    response = client.models.generate_content(
-        model=get_model_id("flash-lite"),
-        contents=prompt,
-        config=types.GenerateContentConfig(
-            temperature=0.7,
-            max_output_tokens=200
+    # Retry once on an empty response: flash-lite intermittently returns no text
+    # for scam-adjacent prompts (model-level safety), and a resample usually succeeds.
+    text = ""
+    for _ in range(2):
+        response = client.models.generate_content(
+            model=get_model_id("flash-lite"),
+            contents=prompt,
+            config=types.GenerateContentConfig(temperature=0.7, max_output_tokens=200),
         )
-    )
-    
-    return response.text.strip()
+        text = (response.text or "").strip()
+        if text:
+            break
+    return text

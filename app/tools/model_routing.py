@@ -11,7 +11,10 @@ def get_model_id(role: str) -> str:
     
     if use_vertex:
         if role == "pro":
-            return "gemini-3.1-pro"
+            # gemini-3.1-pro is published under its preview id on this project;
+            # the bare "gemini-3.1-pro" returns 404. Stays distinct from the
+            # gemini-2.5-pro judge, preserving judge independence.
+            return "gemini-3.1-pro-preview"
         elif role == "flash-lite":
             return "gemini-3.1-flash-lite"
         elif role == "judge":

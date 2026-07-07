@@ -101,7 +101,8 @@ export GEMINI_API_KEY="your-key"         # an AI Studio key on the free tier is 
 # export GOOGLE_CLOUD_PROJECT="your-project"
 
 # analyze a single message
-uv run python -m app.agent --message "Your account will be suspended in 24h, verify at http://..."
+# (on a free AI Studio key, prefix GOOGLE_GENAI_USE_VERTEXAI=False so it doesn't route to Vertex)
+GOOGLE_GENAI_USE_VERTEXAI=False uv run python -m app.agent --message "Your account will be suspended in 24h, verify at http://..."
 
 # run the interactive web demo
 uv run python -m app.ui

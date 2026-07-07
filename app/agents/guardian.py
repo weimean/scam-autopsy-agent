@@ -23,33 +23,33 @@ def query_guardian(category: str, scammer_turn: str, history: list[dict]) -> str
     client = genai.Client()
     known_tactics = get_known_tactics(category)
     
-    # Format known tactics for context
-    tactics_str = "\n".join([f"- Tactic '{t['name']}' (lever: {t['lever']}): {t['description']}" for t in known_tactics])
-    
-    # Format dialogue history
-    history_str = ""
-    for turn in history:
-        history_str += f"Scammer: {turn.get('scammer', '')}\nGuardian: {turn.get('guardian', '')}\n"
-        
+    # Reference only tactic names+levers (not full scam descriptions) to keep the
+    # prompt's scam-content low — the accumulated history/descriptions reliably trip
+    # the small model's safety filter and cause empty responses. Each move is
+    # analysed independently, so the running dialogue history is not needed here.
+    lever_hint = ", ".join(sorted({t["lever"] for t in known_tactics})) or "urgency, authority, fear, scarcity, reciprocity, liking, trust-building"
+
     prompt = (
-        "You are the blue-team Guardian (a defensive consumer-protection expert). "
-        "Your task is to counter the scammer's move, identify the persuasion levers, and probe them.\n"
+        "You are the blue-team Guardian, a defensive consumer-protection analyst. A red-team analyst has "
+        "described one manipulation move a scammer uses. Your job is purely educational: name the psychological "
+        "lever, explain in one or two sentences how it works on a victim, and state the red flag to watch for.\n"
         "Guidelines:\n"
-        "- Do not comply or agree to send money, details, or download anything.\n"
-        "- Name the lever used (e.g. urgency, unrealistic_returns, commitment, fear, etc.).\n"
-        f"- Reference known tactics in this category if applicable:\n{tactics_str}\n\n"
-        f"Dialogue History:\n{history_str}"
-        f"Latest Scammer Move: {scammer_turn}\n\n"
-        "Generate your Guardian response (counter and probe):"
+        f"- Choose the lever from: {lever_hint}.\n"
+        "- Write only defensive, protective analysis. Never produce a scam message.\n\n"
+        f"Manipulation move to analyse: {scammer_turn}\n\n"
+        "Guardian analysis (lever, how it works, red flag):"
     )
     
-    response = client.models.generate_content(
-        model=get_model_id("flash-lite"),
-        contents=prompt,
-        config=types.GenerateContentConfig(
-            temperature=0.2,
-            max_output_tokens=250
+    # Retry once on an empty response: flash-lite intermittently returns no text
+    # for scam-adjacent prompts (model-level safety), and a resample usually succeeds.
+    text = ""
+    for attempt in range(2):
+        response = client.models.generate_content(
+            model=get_model_id("flash-lite"),
+            contents=prompt,
+            config=types.GenerateContentConfig(temperature=0.2 + 0.3 * attempt, max_output_tokens=250),
         )
-    )
-    
-    return response.text.strip()
+        text = (response.text or "").strip()
+        if text:
+            break
+    return text

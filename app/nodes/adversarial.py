@@ -44,14 +44,18 @@ async def adversarial_core(ctx: Context, node_input: ClassifierOutput) -> Advers
                 ctx.state["degradation_reason"] = "Token ceiling exceeded"
                 break
             
+            # Prior turns as dicts — the agents expect list[dict] and read them
+            # with .get(); passing AdversarialTurn objects crashes on turn 2+.
+            history = [t.model_dump() for t in turns]
+
             # 1. Scammer turn (Red-team pitch simulation)
-            scammer_raw = await asyncio.to_thread(query_scammer, current_input, turns)
-            
+            scammer_raw = await asyncio.to_thread(query_scammer, current_input, history)
+
             # Apply Policy Server safety checks (structural + semantic)
             scammer_clean = validate_scammer_output(scammer_raw)
-            
+
             # 2. Guardian turn (Blue-team response & lever checking)
-            guardian_res = await asyncio.to_thread(query_guardian, node_input.category, scammer_clean, turns)
+            guardian_res = await asyncio.to_thread(query_guardian, node_input.category, scammer_clean, history)
             
             # Log turn and track counts
             turns.append(AdversarialTurn(scammer=scammer_clean, guardian=guardian_res))
