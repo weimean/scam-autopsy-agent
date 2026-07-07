@@ -66,9 +66,9 @@ I wrote the eval harness before the agents, so every step of the build had a num
 
 | Metric | Result | Sample | Notes |
 | --- | --- | --- | --- |
-| Classifier F1 | **94.34%** | n=100 | Scored on public data (UCI SMS Spam Collection), not my own examples |
-| False-positive rate | **8.33%** | n=100 | Tuned to err toward catching scams over staying quiet |
-| Tactic-extraction quality | **5.0 / 5.0** | n=18 | LLM-as-judge; the extractor can only pick valid taxonomy levers (Pydantic `Literal`s). Fresh out-of-distribution scams confirm it holds up |
+| Classifier F1 | **94.74%** | n=100 | Scored on public data (UCI SMS Spam Collection), not my own examples |
+| False-positive rate | **11.11%** | n=100 | Tuned to err toward catching scams over staying quiet |
+| Tactic-extraction quality | **3.52 / 5.0** | n=21 | Independent LLM-as-judge (`gemini-2.5-pro` grading the agents). The extractor tends to *over-extract* — it names levers beyond the ground truth, which the judge penalizes — though the taxonomy stays constrained to valid Pydantic `Literal`s |
 | Safety policy success | **100%** | n=11 | 8 offensive-content attacks blocked, 2 benign defensive requests allowed, 1 forecast injection blocked |
 
 ### How I kept the numbers honest
@@ -77,7 +77,7 @@ This is the part I'm most proud of, because a green scorecard is easy to fake yo
 
 - **I scored the classifier on outside data.** Public SMS-spam messages, not the cases I wrote, so a good F1 means it generalizes instead of memorizing my test set.
 - **The judge is a different model from the agents** (on Vertex, `gemini-2.5-pro` grading `gemini-3.1` agents). The free-tier run collapses everything to one model to survive the quota, and I say so rather than hide it.
-- **I caught myself gaming my own eval.** An early scorecard read "100%" because it was quietly running on 3 cases. I noticed, expanded it to the full set, and the real F1 is the 94.34% above.
+- **I caught myself gaming my own eval.** An early scorecard read "100%" because it was quietly running on 3 cases. I noticed, expanded it to the full set, and the real F1 is the 94.74% above.
 - **I caught the safety layer over-blocking.** The escalation forecaster started censoring its own *warnings to the victim* as if they were scam scripts. I retuned the semantic gate to tell a warning apart from a script, then re-ran the safety suite to confirm the real attacks still get blocked.
 
 ## Hardening it: the bug my fail-safe was hiding
@@ -90,7 +90,7 @@ Fixing the crash surfaced a more interesting problem: even with the loop running
 
 The loop runs end to end now: six turns, both agents populated, the manipulation playbook surfaced move by move — fear, authority, reciprocity, scarcity, trust-building — and those tactics flow into the report instead of coming from a fallback.
 
-**One caveat, stated plainly:** the scorecard above was measured *before* these fixes, while the loop was quietly degrading — so those numbers lean on the fallback path more than the adversarial one. They should hold or improve now that the loop actually works, but I'd re-run the suite before leaning on them in anger.
+**I re-ran the whole suite after these fixes** (on Vertex, with the independent `gemini-2.5-pro` judge), and the honest picture shifted. The classifier F1 held (**94.74%**), the false-positive rate rose a little (**11.11%**), safety stayed at **100%** — and tactic-extraction quality came in at **3.52/5**, not the 5.0 an earlier run showed. That earlier perfect score had leaned on a mock judge that quietly returned near-ground-truth answers whenever the real judge hit a quota wall; once I stopped it inflating the number, the truth is that the extractor **over-extracts** — it names levers beyond what's really there. Lower, but real — and it points straight at the next thing to fix.
 
 ## Safety design
 
