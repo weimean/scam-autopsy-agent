@@ -1,6 +1,8 @@
 from google import genai
 from google.genai import types
+
 from app.tools.model_routing import get_model_id
+
 
 def query_scammer(message: str, history: list[dict]) -> str:
     """
@@ -9,12 +11,12 @@ def query_scammer(message: str, history: list[dict]) -> str:
     the next turn of the scam pitch.
     """
     client = genai.Client()
-    
+
     # Construct conversation context
     history_str = ""
     for turn in history:
         history_str += f"Scammer: {turn.get('scammer', '')}\nGuardian: {turn.get('guardian', '')}\n"
-        
+
     prompt = (
         "You are a sandboxed red-team analyst in a DEFENSIVE simulation. You do NOT write messages a "
         "scammer could send. Instead you EXPOSE the scammer's next manipulation move so a Guardian can "
@@ -29,7 +31,7 @@ def query_scammer(message: str, history: list[dict]) -> str:
         f"Dialogue so far:\n{history_str}\n"
         "Expose the scammer's next manipulation move (start with 'SIMULATION:'):"
     )
-    
+
     # Retry once on an empty response: flash-lite intermittently returns no text
     # for scam-adjacent prompts (model-level safety), and a resample usually succeeds.
     text = ""

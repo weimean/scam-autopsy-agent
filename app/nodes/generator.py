@@ -1,17 +1,31 @@
 import sqlite3
-from typing import Union
-from pydantic import BaseModel, Field
+
 from google import genai
-from google.genai import types
 from google.adk.agents.context import Context
-from app.schemas import ClassifierOutput, TacticInfo, ReportOutput, VerdictInfo, ReportingLink, EscalationStage
+from google.genai import types
+from pydantic import BaseModel, Field
+
 from app.guardrails.policy import validate_report_output
+from app.schemas import (
+    ClassifierOutput,
+    EscalationStage,
+    ReportingLink,
+    ReportOutput,
+    TacticInfo,
+    VerdictInfo,
+)
 from app.tools.model_routing import get_model_id
 
+
 class SynthesizedReport(BaseModel):
-    warning: str = Field(..., description="1-2 sentence warning about this specific scam")
+    warning: str = Field(
+        ..., description="1-2 sentence warning about this specific scam"
+    )
     how_to_protect: list[str] = Field(..., description="List of concrete steps to take")
-    reporting_links: list[ReportingLink] = Field(..., description="Official reporting channels")
+    reporting_links: list[ReportingLink] = Field(
+        ..., description="Official reporting channels"
+    )
+
 
 def get_stats_total() -> int:
     """Queries the SQLite tactics table to get the total number of catalogued tactics."""
@@ -29,10 +43,11 @@ def get_stats_total() -> int:
         except Exception:
             pass
 
+
 async def report_generator(
-    ctx: Context, 
-    node_input: Union[list[TacticInfo], ClassifierOutput], 
-    classifier_output: ClassifierOutput = None
+    ctx: Context,
+    node_input: list[TacticInfo] | ClassifierOutput,
+    classifier_output: ClassifierOutput = None,
 ) -> ReportOutput:
     """
     WHY: Assembles the final threat intelligence report following specs/03_schemas.md.
@@ -56,7 +71,7 @@ async def report_generator(
             confidence=0.0,
             category="unknown",
             red_flag_hints=[],
-            masked_text=""
+            masked_text="",
         )
 
     # 1.5 Read the detected language from context state (set by Intake)
@@ -68,52 +83,54 @@ async def report_generator(
 
     # 2.5 If safety blocked, return security warning immediately
     if ctx.state.get("blocked"):
-        return validate_report_output(ReportOutput(
-            verdict=VerdictInfo(
-                is_scam=True,
-                confidence=1.0,
-                category="unknown"
-            ),
-            tactics=[],
-            warning="[CONTENT BLOCKED by Policy Server - Reframed to defensive analysis of the scam pattern to prevent offensive generation]",
-            how_to_protect=[
-                "Do not interact with or attempt to generate malicious content.",
-                "Report potential online abuse or security issues to appropriate authorities."
-            ],
-            reporting_links=[],
-            disclaimer="educational, not legal/financial advice",
-            kb_stat=kb_stat,
-            language=detected_lang,
-            escalation_forecast=[]
-        ))
+        return validate_report_output(
+            ReportOutput(
+                verdict=VerdictInfo(is_scam=True, confidence=1.0, category="unknown"),
+                tactics=[],
+                warning="[CONTENT BLOCKED by Policy Server - Reframed to defensive analysis of the scam pattern to prevent offensive generation]",
+                how_to_protect=[
+                    "Do not interact with or attempt to generate malicious content.",
+                    "Report potential online abuse or security issues to appropriate authorities.",
+                ],
+                reporting_links=[],
+                disclaimer="educational, not legal/financial advice",
+                kb_stat=kb_stat,
+                language=detected_lang,
+                escalation_forecast=[],
+            )
+        )
 
     # 3. Handle benign messages (ham) without calling LLM (token optimization)
     if not classifier_output.is_scam:
-        return validate_report_output(ReportOutput(
-            verdict=VerdictInfo(
-                is_scam=False,
-                confidence=classifier_output.confidence,
-                category=classifier_output.category
-            ),
-            tactics=[],
-            warning="This message does not appear to be a scam. No safety threats identified.",
-            how_to_protect=[
-                "Keep personal details secure.",
-                "Avoid clicking on links sent from unsolicited numbers or emails."
-            ],
-            reporting_links=[
-                ReportingLink(label="FTC Consumer Advice", url="https://consumer.ftc.gov")
-            ],
-            disclaimer="educational, not legal/financial advice",
-            kb_stat=kb_stat,
-            language=detected_lang,
-            escalation_forecast=[]
-        ))
+        return validate_report_output(
+            ReportOutput(
+                verdict=VerdictInfo(
+                    is_scam=False,
+                    confidence=classifier_output.confidence,
+                    category=classifier_output.category,
+                ),
+                tactics=[],
+                warning="This message does not appear to be a scam. No safety threats identified.",
+                how_to_protect=[
+                    "Keep personal details secure.",
+                    "Avoid clicking on links sent from unsolicited numbers or emails.",
+                ],
+                reporting_links=[
+                    ReportingLink(
+                        label="FTC Consumer Advice", url="https://consumer.ftc.gov"
+                    )
+                ],
+                disclaimer="educational, not legal/financial advice",
+                kb_stat=kb_stat,
+                language=detected_lang,
+                escalation_forecast=[],
+            )
+        )
 
     # 4. Synthesize scam warning/guidance using gemini-3.1-pro
     client = genai.Client()
     tactics_summary = ", ".join([f"{t.name} (lever: {t.lever})" for t in tactics])
-    
+
     # WHY: We instruct the LLM to write in the detected language so non-English speakers
     # receive actionable protection guidance they can actually read. Taxonomy identifiers
     # (lever names, categories) remain English because they are language-agnostic codes.
@@ -124,7 +141,7 @@ async def report_generator(
             f"reporting_links labels, disclaimer) in the language with ISO 639-1 code '{detected_lang}'. "
             f"Do NOT translate field names or lever/category identifiers — only the values."
         )
-    
+
     prompt = (
         f"You are a consumer protection threat analyst writing an educational safety advisory.\n"
         f"Analyze this scam category '{classifier_output.category}' with text:\n"
@@ -136,19 +153,19 @@ async def report_generator(
         f"3. reporting_links: list of official channels to report this category of scam (e.g. FTC at https://reportfraud.ftc.gov, IC3 at https://www.ic3.gov, etc. with label and url fields).\n"
         f"{lang_instruction}"
     )
-    
+
     response = client.models.generate_content(
         model=get_model_id("pro"),
         contents=prompt,
         config=types.GenerateContentConfig(
             response_mime_type="application/json",
             response_schema=SynthesizedReport,
-            temperature=0.0
-        )
+            temperature=0.0,
+        ),
     )
-    
+
     synthesized = SynthesizedReport.model_validate_json(response.text.strip())
-    
+
     forecast_state = ctx.state.get("escalation_forecast", [])
     forecast = []
     for item in forecast_state:
@@ -157,18 +174,20 @@ async def report_generator(
         else:
             forecast.append(item)
 
-    return validate_report_output(ReportOutput(
-        verdict=VerdictInfo(
-            is_scam=True,
-            confidence=classifier_output.confidence,
-            category=classifier_output.category
-        ),
-        tactics=tactics,
-        warning=synthesized.warning,
-        how_to_protect=synthesized.how_to_protect,
-        reporting_links=synthesized.reporting_links,
-        disclaimer="educational, not legal/financial advice",
-        kb_stat=kb_stat,
-        language=detected_lang,
-        escalation_forecast=forecast
-    ))
+    return validate_report_output(
+        ReportOutput(
+            verdict=VerdictInfo(
+                is_scam=True,
+                confidence=classifier_output.confidence,
+                category=classifier_output.category,
+            ),
+            tactics=tactics,
+            warning=synthesized.warning,
+            how_to_protect=synthesized.how_to_protect,
+            reporting_links=synthesized.reporting_links,
+            disclaimer="educational, not legal/financial advice",
+            kb_stat=kb_stat,
+            language=detected_lang,
+            escalation_forecast=forecast,
+        )
+    )

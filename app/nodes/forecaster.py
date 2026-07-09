@@ -1,15 +1,27 @@
 from google import genai
+from google.adk.agents.context import Context
 from google.genai import types
 from pydantic import BaseModel, Field
-from google.adk.agents.context import Context
-from app.schemas import TacticInfo, EscalationStage, ClassifierOutput, AdversarialTranscript
-from app.tools.model_routing import get_model_id
+
 from app.guardrails.policy import validate_text_semantic
+from app.schemas import (
+    AdversarialTranscript,
+    ClassifierOutput,
+    EscalationStage,
+    TacticInfo,
+)
+from app.tools.model_routing import get_model_id
+
 
 class EscalationForecastWrapper(BaseModel):
-    forecast: list[EscalationStage] = Field(..., description="Staged forecast of likely escalation behaviors")
+    forecast: list[EscalationStage] = Field(
+        ..., description="Staged forecast of likely escalation behaviors"
+    )
 
-async def escalation_forecaster(ctx: Context, node_input: list[TacticInfo]) -> list[TacticInfo]:
+
+async def escalation_forecaster(
+    ctx: Context, node_input: list[TacticInfo]
+) -> list[TacticInfo]:
     """
     WHY: Evaluates the adversarial replay transcript and identified tactics to predict
     defensively how the scam would likely escalate if the user continues to engage.
@@ -42,12 +54,16 @@ async def escalation_forecaster(ctx: Context, node_input: list[TacticInfo]) -> l
     context_str = ""
     if is_degraded or not transcript or not transcript.turns:
         category = classifier_output.category if classifier_output else "unknown"
-        hints = ", ".join(classifier_output.red_flag_hints) if classifier_output else "None"
+        hints = (
+            ", ".join(classifier_output.red_flag_hints) if classifier_output else "None"
+        )
         context_str = f"Scam Category: {category}\nRed Flag Hints: {hints}\nSanitized Message: {classifier_output.masked_text if classifier_output else ''}"
     else:
         transcript_str = ""
         for idx, turn in enumerate(transcript.turns):
-            transcript_str += f"Turn {idx+1}:\nScammer: {turn.scammer}\nGuardian: {turn.guardian}\n"
+            transcript_str += (
+                f"Turn {idx + 1}:\nScammer: {turn.scammer}\nGuardian: {turn.guardian}\n"
+            )
         context_str = f"Scam Category: {classifier_output.category if classifier_output else 'unknown'}\nAdversarial Transcript:\n{transcript_str}"
 
     # 3. Create the prompt instructing the model to generate the forecast
@@ -77,13 +93,13 @@ async def escalation_forecaster(ctx: Context, node_input: list[TacticInfo]) -> l
     # 4. Invoke the pro model to generate the structured forecast with a retry loop
     client = genai.Client()
     forecast_list = []
-    
+
     # Try up to 3 times to get a forecast that fully passes the semantic policy gate
     for attempt in range(3):
         current_prompt = prompt
         if attempt > 0:
             current_prompt += (
-                f"\n\nSTRICT SAFETY WARNING (Attempt {attempt+1}): The previous generation failed "
+                f"\n\nSTRICT SAFETY WARNING (Attempt {attempt + 1}): The previous generation failed "
                 "the safety gate. You must make sure every field is purely an analytical warning "
                 "to the victim. Avoid any copy-pasteable scam dialog or direct requests."
             )
@@ -94,19 +110,23 @@ async def escalation_forecaster(ctx: Context, node_input: list[TacticInfo]) -> l
                 config=types.GenerateContentConfig(
                     response_mime_type="application/json",
                     response_schema=EscalationForecastWrapper,
-                    temperature=0.1 * attempt
-                )
+                    temperature=0.1 * attempt,
+                ),
             )
-            parsed = EscalationForecastWrapper.model_validate_json(response.text.strip())
+            parsed = EscalationForecastWrapper.model_validate_json(
+                response.text.strip()
+            )
             candidate_list = parsed.forecast
-            
+
             # Verify if all stages pass the semantic policy gate
             all_ok = True
             for item in candidate_list:
-                if not validate_text_semantic(item.what_to_expect, is_warning=True) or not validate_text_semantic(item.red_flag, is_warning=True):
+                if not validate_text_semantic(
+                    item.what_to_expect, is_warning=True
+                ) or not validate_text_semantic(item.red_flag, is_warning=True):
                     all_ok = False
                     break
-            
+
             if all_ok and len(candidate_list) == 3:
                 forecast_list = candidate_list
                 break
@@ -120,41 +140,41 @@ async def escalation_forecaster(ctx: Context, node_input: list[TacticInfo]) -> l
                 EscalationStage(
                     stage=1,
                     what_to_expect="Intentarán ganarse su confianza y alejarlo de los canales oficiales. Nunca comparta sus datos de acceso ni códigos recibidos.",
-                    red_flag="Solicitud de pasar a un chat privado fuera de la plataforma segura."
+                    red_flag="Solicitud de pasar a un chat privado fuera de la plataforma segura.",
                 ),
                 EscalationStage(
                     stage=2,
                     what_to_expect="Le pedirán un pequeño pago o depósito inicial bajo falsos pretextos como tarifas de activación.",
-                    red_flag="Solicitud de transferencia de dinero, recarga de saldo o depósitos criptográficos."
+                    red_flag="Solicitud de transferencia de dinero, recarga de saldo o depósitos criptográficos.",
                 ),
                 EscalationStage(
                     stage=3,
                     what_to_expect="Le dirán que ha surgido una crisis o que requiere pagar impuestos adicionales para poder liberar o retirar sus fondos.",
-                    red_flag="Exigencia de cargos de liberación para retirar dinero."
-                )
+                    red_flag="Exigencia de cargos de liberación para retirar dinero.",
+                ),
             ]
-        else: # Default English fallback
+        else:  # Default English fallback
             forecast_list = [
                 EscalationStage(
                     stage=1,
                     what_to_expect="They will try to build trust and isolate you from official platforms. Never share credentials or validation codes.",
-                    red_flag="Request to move to a private messaging app."
+                    red_flag="Request to move to a private messaging app.",
                 ),
                 EscalationStage(
                     stage=2,
                     what_to_expect="They will request a small initial payment or deposit under false pretenses such as account activation fees.",
-                    red_flag="Direct request for money transfers or crypto deposits."
+                    red_flag="Direct request for money transfers or crypto deposits.",
                 ),
                 EscalationStage(
                     stage=3,
                     what_to_expect="They will invent a crisis or claim you must pay additional release fees or taxes to withdraw your funds.",
-                    red_flag="Demanding advance fees or tax payments to retrieve money."
-                )
+                    red_flag="Demanding advance fees or tax payments to retrieve money.",
+                ),
             ]
 
     # 6. Save back to ctx.state for the Report Generator to include in the final JSON output (JSON serializable)
     ctx.state["escalation_forecast"] = [
-        item.model_dump() if hasattr(item, "model_dump") else item 
+        item.model_dump() if hasattr(item, "model_dump") else item
         for item in forecast_list
     ]
 
