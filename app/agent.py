@@ -13,17 +13,19 @@
 # limitations under the License.
 
 import os
+
 import google.auth
 from google.adk.apps import App
-from google.adk.workflow import Workflow, START
 from google.adk.events.event import Event
+from google.adk.workflow import START, Workflow
+
+from app.nodes.adversarial import adversarial_core
+from app.nodes.extractor import tactic_extractor
+from app.nodes.forecaster import escalation_forecaster
+from app.nodes.generator import report_generator
 
 # Import custom nodes
 from app.nodes.intake import intake_classifier
-from app.nodes.adversarial import adversarial_core
-from app.nodes.extractor import tactic_extractor
-from app.nodes.generator import report_generator
-from app.nodes.forecaster import escalation_forecaster
 from app.schemas import ClassifierOutput, ReportOutput
 
 # Ensure GCP configuration is loaded
@@ -42,34 +44,31 @@ else:
     os.environ["GOOGLE_CLOUD_LOCATION"] = "global"
     os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
 
+
 def check_scam(node_input: ClassifierOutput) -> Event:
     """Route based on whether a scam is detected with high confidence."""
     # Store classifier output in state for the generator node to access safely (JSON serializable)
     c_out = node_input.model_dump() if hasattr(node_input, "model_dump") else node_input
     if node_input.is_scam and node_input.confidence >= 0.5:
         return Event(
-            output=node_input,
-            route="scam",
-            state={"classifier_output": c_out}
+            output=node_input, route="scam", state={"classifier_output": c_out}
         )
-    return Event(
-        output=node_input,
-        route="no_scam",
-        state={"classifier_output": c_out}
-    )
+    return Event(output=node_input, route="no_scam", state={"classifier_output": c_out})
+
 
 # Edge definitions mapping the system flow
 edges = [
     # 1. Intake & Classification
     (START, intake_classifier),
     (intake_classifier, check_scam),
-    
     # 2. Conditional branch
-    (check_scam, {
-        "scam": adversarial_core,
-        "no_scam": report_generator,
-    }),
-    
+    (
+        check_scam,
+        {
+            "scam": adversarial_core,
+            "no_scam": report_generator,
+        },
+    ),
     # 3. Rest of the scam detection path
     (adversarial_core, tactic_extractor),
     (tactic_extractor, escalation_forecaster),
@@ -92,21 +91,30 @@ if __name__ == "__main__":
     import argparse
     import asyncio
     import json
-    from google.genai import types
-    from google.adk.runners import InMemoryRunner
 
-    parser = argparse.ArgumentParser(description="Run Scam Autopsy on a single message.")
-    parser.add_argument("--message", required=True, help="The suspicious scam message to analyze.")
+    from google.adk.runners import InMemoryRunner
+    from google.genai import types
+
+    parser = argparse.ArgumentParser(
+        description="Run Scam Autopsy on a single message."
+    )
+    parser.add_argument(
+        "--message", required=True, help="The suspicious scam message to analyze."
+    )
     args = parser.parse_args()
 
     async def run_single():
         runner = InMemoryRunner(app=app)
-        session = await runner.session_service.create_session(app_name=runner.app_name, user_id="cli_user")
+        session = await runner.session_service.create_session(
+            app_name=runner.app_name, user_id="cli_user"
+        )
         result = None
         async for event in runner.run_async(
             user_id="cli_user",
             session_id=session.id,
-            new_message=types.Content(role="user", parts=[types.Part.from_text(text=args.message)]),
+            new_message=types.Content(
+                role="user", parts=[types.Part.from_text(text=args.message)]
+            ),
         ):
             if event.output is not None:
                 result = event.output

@@ -1,7 +1,7 @@
 [project]
 name = "scam-autopsy"
 version = "0.1.0"
-description = ""
+description = "A multi-agent system that dissects scam messages: verdict, manipulation-tactic breakdown, and an escalation forecast, backed by a shared scam-intel knowledge base."
 authors = [
     {name = "Tsoi Wai Mun", email = "waimun@wmtsoi.dev"},
 ]
@@ -55,7 +55,7 @@ select = [
 ignore = ["E501", "C901", "B006"] # ignore line too long, too complex
 
 [tool.ruff.lint.isort]
-known-first-party = ["app", "frontend"]
+known-first-party = ["app"]
 
 [tool.ty]
 # ty is Astral's Rust-based type checker (same team as ruff/uv)
@@ -79,8 +79,12 @@ not-subscriptable = "ignore"
 deprecated = "ignore"
 
 [tool.codespell]
-ignore-words-list = "rouge"
-skip = "./locust_env/*,uv.lock,.venv,./frontend,**/package-lock.json"
+# "fpr" = false-positive rate (eval harness); "retuned" = re-tuned;
+# "inicial"/"requiere" are Spanish words in a multilingual few-shot example.
+# The eval datasets are a corpus of real scam messages whose deliberate
+# misspellings are part of the data, so they are skipped below.
+ignore-words-list = "rouge,fpr,retuned,inicial,requiere"
+skip = "./locust_env/*,uv.lock,.venv,./frontend,**/package-lock.json,./eval/*.json,./eval/.eval_cache.json,./tests/eval/datasets/*.json"
 
 
 [build-system]
@@ -93,6 +97,6 @@ pythonpath = "."
 asyncio_default_fixture_loop_scope = "function"
 
 [tool.hatch.build.targets.wheel]
-packages = ["app","frontend"]
+packages = ["app"]
 
 

@@ -1,7 +1,9 @@
 from google import genai
 from google.genai import types
+
 from app.schemas import ReportOutput
 from app.tools.model_routing import get_model_id
+
 
 def validate_input_intent(text: str) -> bool:
     """
@@ -10,7 +12,7 @@ def validate_input_intent(text: str) -> bool:
     """
     if not text:
         return True
-        
+
     client = genai.Client()
     prompt = (
         "Analyze the user's input. We are a defensive consumer-protection agent.\n"
@@ -23,20 +25,21 @@ def validate_input_intent(text: str) -> bool:
         f"Input:\n{text}\n\n"
         "Response (VIOLATION or OK):"
     )
-    
+
     try:
         response = client.models.generate_content(
             model=get_model_id("pro"),
             contents=prompt,
-            config=types.GenerateContentConfig(temperature=0.0)
+            config=types.GenerateContentConfig(temperature=0.0),
         )
         verdict = response.text.strip().upper()
         if "VIOLATION" in verdict:
             return False
     except Exception:
         return False
-        
+
     return True
+
 
 def validate_text_semantic(text: str, is_warning: bool = False) -> bool:
     """
@@ -44,11 +47,12 @@ def validate_text_semantic(text: str, is_warning: bool = False) -> bool:
     Returns True if OK, False if VIOLATION.
     """
     import time
+
     if not text:
         return True
-        
+
     client = genai.Client()
-    
+
     context_str = ""
     if is_warning:
         context_str = (
@@ -70,13 +74,13 @@ def validate_text_semantic(text: str, is_warning: bool = False) -> bool:
         f"Text to evaluate:\n{text}\n\n"
         "Response (strictly either VIOLATION or OK):"
     )
-    
+
     for attempt in range(3):
         try:
             response = client.models.generate_content(
                 model=get_model_id("pro"),
                 contents=prompt,
-                config=types.GenerateContentConfig(temperature=0.0)
+                config=types.GenerateContentConfig(temperature=0.0),
             )
             verdict = response.text.strip().upper()
             if "VIOLATION" in verdict:
@@ -84,14 +88,20 @@ def validate_text_semantic(text: str, is_warning: bool = False) -> bool:
             return True
         except Exception as e:
             err_str = str(e)
-            if "429" in err_str or "RESOURCE_EXHAUSTED" in err_str or "503" in err_str or "UNAVAILABLE" in err_str:
+            if (
+                "429" in err_str
+                or "RESOURCE_EXHAUSTED" in err_str
+                or "503" in err_str
+                or "UNAVAILABLE" in err_str
+            ):
                 sleep_time = 2.0 + attempt * 2.0
                 time.sleep(sleep_time)
             else:
                 return False
-                
+
     # If quota persists, fail-open for internal warnings, fail-closed for raw inputs
     return is_warning
+
 
 def validate_scammer_output(text: str) -> str:
     """
@@ -118,6 +128,7 @@ def validate_scammer_output(text: str) -> str:
 
     return clean_text
 
+
 def validate_report_output(report: ReportOutput) -> ReportOutput:
     """
     Gates the final Report output to ensure no deployable scam components leak in warnings, protect steps, or escalation forecast.
@@ -125,7 +136,7 @@ def validate_report_output(report: ReportOutput) -> ReportOutput:
     # Check warning text
     if report.warning and not validate_text_semantic(report.warning, is_warning=True):
         report.warning = "[CONTENT BLOCKED by Policy Server - Reframed to defensive analysis of the scam pattern to prevent offensive generation]"
-        
+
     # Check how_to_protect descriptions
     cleaned_steps = []
     for step in report.how_to_protect:
@@ -134,22 +145,32 @@ def validate_report_output(report: ReportOutput) -> ReportOutput:
         else:
             cleaned_steps.append(step)
     report.how_to_protect = cleaned_steps
-    
+
     # Check escalation forecast descriptions and red flags
     cleaned_forecast = []
     if hasattr(report, "escalation_forecast") and report.escalation_forecast:
         for item in report.escalation_forecast:
             expect_ok = validate_text_semantic(item.what_to_expect, is_warning=True)
             flag_ok = validate_text_semantic(item.red_flag, is_warning=True)
-            
-            cleaned_expect = item.what_to_expect if expect_ok else "[CONTENT BLOCKED by Policy Server - Reframed to defensive warning to prevent operational leak]"
-            cleaned_flag = item.red_flag if flag_ok else "[CONTENT BLOCKED by Policy Server - Security flag violation]"
-            
-            cleaned_forecast.append(item.__class__(
-                stage=item.stage,
-                what_to_expect=cleaned_expect,
-                red_flag=cleaned_flag
-            ))
+
+            cleaned_expect = (
+                item.what_to_expect
+                if expect_ok
+                else "[CONTENT BLOCKED by Policy Server - Reframed to defensive warning to prevent operational leak]"
+            )
+            cleaned_flag = (
+                item.red_flag
+                if flag_ok
+                else "[CONTENT BLOCKED by Policy Server - Security flag violation]"
+            )
+
+            cleaned_forecast.append(
+                item.__class__(
+                    stage=item.stage,
+                    what_to_expect=cleaned_expect,
+                    red_flag=cleaned_flag,
+                )
+            )
         report.escalation_forecast = cleaned_forecast
-        
+
     return report

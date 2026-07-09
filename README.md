@@ -1,10 +1,13 @@
 # 🛡️ Scam Autopsy
 
+[![CI](https://github.com/weimean/scam-autopsy-agent/actions/workflows/ci.yml/badge.svg)](https://github.com/weimean/scam-autopsy-agent/actions/workflows/ci.yml)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue?logo=python&logoColor=white)](https://www.python.org/)
+[![License: CC BY 4.0](https://img.shields.io/badge/license-CC%20BY%204.0-lightgrey)](LICENSE)
+[![Built with ADK](https://img.shields.io/badge/built%20with-Google%20ADK%202.0-4285F4?logo=google&logoColor=white)](https://google.github.io/adk-docs/)
+
 Forward it a scam message and it tells you three things: whether it's a scam, exactly how the message is trying to manipulate you, and what the scammer would do next if you replied. Everything it learns gets saved to a shared knowledge base, so the next person who checks a similar scam gets a better answer. An interactive web demo is available via Gradio to paste and analyze messages in your browser.
 
 Built for the Kaggle × Google *5-Day AI Agents: Intensive Vibe Coding* Capstone. **Track: Agents for Good.**
-
-> [Optional: add a sentence here on why you built this — e.g. a scam a friend or relative nearly fell for. A real reason lands better than any feature list.]
 
 ---
 
@@ -106,7 +109,7 @@ The system holds a red-team agent that talks like a scammer, so I treated safety
 > Needs Python 3.11+, [`uv`](https://docs.astral.sh/uv/), and a Gemini API key. Nothing sensitive lives in the code; keys come from environment variables.
 
 ```bash
-git clone <your-repo-url> && cd scam-autopsy
+git clone https://github.com/weimean/scam-autopsy-agent && cd scam-autopsy-agent
 uv sync                                  # install dependencies
 export GEMINI_API_KEY="your-key"         # an AI Studio key on the free tier is enough
 # optional, for Vertex + an independent judge:

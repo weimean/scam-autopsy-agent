@@ -1,5 +1,6 @@
 import os
 
+
 def get_model_id(role: str) -> str:
     """
     WHY: Handles differences in model names and quota limits between Vertex AI and AI Studio.
@@ -8,7 +9,7 @@ def get_model_id(role: str) -> str:
     'gemini-2.5-flash' on AI Studio free tier, which offers 1500 RPD and fast structured output.
     """
     use_vertex = os.environ.get("GOOGLE_GENAI_USE_VERTEXAI", "True") == "True"
-    
+
     if use_vertex:
         if role == "pro":
             # gemini-3.1-pro is published under its preview id on this project;
@@ -22,5 +23,5 @@ def get_model_id(role: str) -> str:
     else:
         # AI Studio free tier fallbacks to avoid the limit
         return "gemini-3.1-flash-lite"
-        
+
     return "gemini-3.1-flash-lite"
